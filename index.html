@@ -59,11 +59,29 @@
                     + نظام جديد
                 </button>
                 <button onclick="openArticleModal()" class="bg-emerald-900 hover:bg-emerald-800 text-gold-300 border border-gold-500/30 px-3 py-2 rounded-xl text-xs shadow-md transition">
-                    + مادة / سابقة / تعميم
+                    + إضافة محتوى
                 </button>
             </div>
         </div>
     </header>
+
+    <!-- External Global Tabs / Icons (الأنظمة، السوابق، التعاميم، المبادئ والقرارات) -->
+    <div class="bg-emerald-900 border-b border-gold-500/30 shadow-inner">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-2 sm:gap-4 items-center justify-center">
+            <button onclick="switchGlobalTab('systems')" id="tabBtn-systems" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-gold-500 text-emerald-950 shadow">
+                <span>📚</span> الأنظمة واللوائح
+            </button>
+            <button onclick="switchGlobalTab('judgments')" id="tabBtn-judgments" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-800 text-gold-300 hover:bg-emerald-700 border border-gold-500/30">
+                <span>⚖️</span> السوابق القضائية
+            </button>
+            <button onclick="switchGlobalTab('circulars')" id="tabBtn-circulars" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-800 text-gold-300 hover:bg-emerald-700 border border-gold-500/30">
+                <span>📢</span> التعاميم القضائية والإدارية
+            </button>
+            <button onclick="switchGlobalTab('principles')" id="tabBtn-principles" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-800 text-gold-300 hover:bg-emerald-700 border border-gold-500/30">
+                <span>💡</span> المبادئ والقرارات
+            </button>
+        </div>
+    </div>
 
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -84,7 +102,7 @@
         <!-- Search Bar -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gold-500/20">
             <div class="relative">
-                <input type="text" id="searchInput" oninput="render()" placeholder="ابحث في التصنيفات، الأنظمة، المواد، السوابق القضائية، التعاميم، أو القرارات والمبادئ..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                <input type="text" id="searchInput" oninput="render()" placeholder="ابحث في محتوى المنصة الشامل..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
                 <span class="absolute right-3.5 top-4 text-gold-600">🔍</span>
             </div>
         </div>
@@ -99,26 +117,26 @@
         <p>منصة مَرْجِع القانونية © 2026 - نظام إدارة المعلومات القضائية السعودية</p>
     </footer>
 
-    <!-- Modal: Category (Add/Edit) -->
+    <!-- Modal: Category -->
     <div id="categoryModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="catModalTitle" class="font-bold text-emerald-950 text-base">إضافة تصنيف رئيسي جديد</h3>
+                <h3 id="catModalTitle" class="font-bold text-emerald-950 text-base">إضافة تصنيف رئيسي</h3>
                 <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <input type="hidden" id="editCatId" value="">
             <div>
-                <label class="block text-xs font-bold text-emerald-900 mb-1">اسم التصنيف الرئيسي</label>
-                <input type="text" id="catNameInput" placeholder="مثال: القضاء الجنائي، الأنظمة التجارية..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                <label class="block text-xs font-bold text-emerald-900 mb-1">اسم التصنيف</label>
+                <input type="text" id="catNameInput" placeholder="اسم التصنيف..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
             </div>
             <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
                 <button onclick="closeCategoryModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
-                <button onclick="saveCategory()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ التصنيف</button>
+                <button onclick="saveCategory()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: System (Add/Edit) -->
+    <!-- Modal: System -->
     <div id="systemModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
@@ -133,19 +151,19 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">اسم النظام</label>
-                    <input type="text" id="sysNameInput" placeholder="مثال: نظام العمل، نظام التنفيذ..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                    <input type="text" id="sysNameInput" placeholder="مثال: نظام المرافعات الشرعية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">الحالة</label>
                         <select id="sysStatusInput" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                             <option value="ساري">ساري</option>
-                            <option value="معتمد كسابقة">معتمد كسابقة</option>
+                            <option value="معتمد">معتمد</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">(رابط النظام الرسمي )</label>
-                        <input type="url" id="sysUrlInput" placeholder="https://laws.boe.gov. السعودية..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">رابط النظام الرسمي</label>
+                        <input type="url" id="sysUrlInput" placeholder="https://laws.boe.gov.sa/..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
             </div>
@@ -156,43 +174,43 @@
         </div>
     </div>
 
-    <!-- Modal: Article / Precedent / Circular / Decision (Add/Edit) -->
+    <!-- Modal: Article / Content -->
     <div id="articleModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="artModalTitle" class="font-bold text-emerald-950 text-base">إضافة مادة / سابقة قضائية / تعميم / قرار</h3>
+                <h3 id="artModalTitle" class="font-bold text-emerald-950 text-base">إضافة محتوى قانوني</h3>
                 <button onclick="closeArticleModal()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <input type="hidden" id="editArtIndex" value="">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-emerald-900 mb-1">اختر النظام التابع له المحتوى</label>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">اختر النظام التابع له</label>
                     <select id="artSysSelect" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">نوع المحتوى</label>
                         <select id="artTypeInput" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm font-bold text-emerald-900">
-                            <option value="(مادة نظامية">📜 مادة نظامية )</option>
+                            <option value="مادة نظامية">📜 مادة نظامية (ترتيب تلقائي)</option>
                             <option value="سابقة قضائية">⚖️ سابقة قضائية</option>
-                            <option value="التعاميم">📢 التعاميم </option>
-                            <option value="المبادئ والقرارات">💡 المبادئ والقرارات </option>
+                            <option value="تعميم">📢 تعميم قضائي/إداري</option>
+                            <option value="قرار أو مبدأ">💡 قرار أو مبدأ معتمد</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة أو عنوان المعرف</label>
-                        <input type="text" id="artNumberInput" placeholder="مثال: المادة 1 أو مبدأ رقم 5" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة أو العنوان</label>
+                        <input type="text" id="artNumberInput" placeholder="مثال: المادة 75" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-emerald-900 mb-1">نص المادة / قاعدة السابقة / التعميم / القرار</label>
-                    <textarea id="artTextInput" rows="3" placeholder="النص القانوني أو المبدأ..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">النص القانوني / قاعدة السابقة / التعميم</label>
+                    <textarea id="artTextInput" rows="3" placeholder="النص..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-emerald-50/50 p-3 rounded-xl border border-emerald-900/10">
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">الشرح القانوني المستقل</label>
-                        <textarea id="artExpInput" rows="2" placeholder="تفسير الحكم والمقاصد..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">الشرح القانوني (يشمل اللائحة التنفيذية)</label>
+                        <textarea id="artExpInput" rows="2" placeholder="تفسير المادة واللائحة..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">مثال تطبيقي عملي</label>
@@ -200,32 +218,38 @@
                     </div>
                 </div>
 
-                <!-- Independent Linking Fields -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-paper p-3 rounded-xl border border-gold-500/20">
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">التعاميم المرتبطة (مستقلة)</label>
-                        <input type="text" id="artCircInput" placeholder="تعميم رقم 12 | تعميم وزير العدل..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">السوابق القضائية المرتبطة (مستقلة)</label>
-                        <input type="text" id="artJudgeInput" placeholder="مبدأ محكمة العليا رقم..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                <!-- Structured Cross-Linking -->
+                <div class="bg-paper p-3 rounded-xl border border-gold-500/20 space-y-3">
+                    <label class="block text-xs font-bold text-emerald-950">🔗 الارتباط بنظام ومادة أخرى (اختياري)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <select id="crossSysSelect" class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs">
+                            <option value="">-- اختر النظام المرتبط --</option>
+                        </select>
+                        <input type="text" id="crossArtInput" placeholder="رقم المادة المرتبطة (مثلاً: المادة 16)" class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-emerald-900 mb-1">الارتباطات النظامية بمواد أخرى (اختياري)</label>
-                    <input type="text" id="artCrossInput" placeholder="مثال: ترتبط بالمادة 16 من نظام المحاكم" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-paper p-3 rounded-xl border border-gold-500/20">
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">التعاميم المستقلة (افصلي بـ |)</label>
+                        <input type="text" id="artCircInput" placeholder="تعميم رقم 12..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">السوابق المستقلة (افصلي بـ |)</label>
+                        <input type="text" id="artJudgeInput" placeholder="مبدأ محكمة العليا..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
                 <button onclick="closeArticleModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
-                <button onclick="saveArticle()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ المحتوى</button>
+                <button onclick="saveArticle()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ</button>
             </div>
         </div>
     </div>
 
-    <!-- Script Logic with Full Master Database (Labor, Execution, Evidence, Commercial, Procedures...) -->
+    <!-- Script Logic -->
     <script>
-        let db = JSON.parse(localStorage.getItem('marja_master_complete_db_v2')) || [
+        let db = JSON.parse(localStorage.getItem('marja_master_complete_db_v3')) || [
             {
                 id: 1,
                 name: "الإجراءات القضائية والمرافعات",
@@ -242,7 +266,8 @@
                                 text: "تطبق المحاكم على الدعاوى المعروضة عليها أحكام الشريعة الإسلامية...",
                                 explanation: "الأصل في التقاضي استمداد الأحكام من الشريعة الإسلامية.",
                                 example: "الرجوع للمصادر الفقهية المعتمدة.",
-                                crossLinks: "",
+                                crossSysId: "",
+                                crossArt: "",
                                 circulars: ["تعميم رئيس المجلس الأعلى للقضاء رقم 12"],
                                 judgments: []
                             },
@@ -252,7 +277,8 @@
                                 text: "إذا دفع أحد الأطراف بعدم الاختصاص النوعي وجب على المحكمة أن تفصل فيه بحكم مستقل...",
                                 explanation: "قواعد الاختصاص النوعي من النظام العام وتثار في أي مرحلة من مراحل الدعوى.",
                                 example: "الدفع بكون النزاع تجارياً أمام محكمة الأحوال الشخصية.",
-                                crossLinks: "المادة 16 من نظام المحاكم التجارية",
+                                crossSysId: "201",
+                                crossArt: "المادة 16",
                                 circulars: ["اللائحة التنفيذية لنظام المرافعات"],
                                 judgments: ["مبدأ المحكمة العليا: الدفع بعدم الاختصاص يقبل في أي مرحلة"]
                             }
@@ -267,10 +293,11 @@
                             {
                                 type: "مادة نظامية",
                                 number: "المادة 1",
-                                text: "البيينة على من ادعى واليمين على من أنكر.",
+                                text: "البينة على من ادعى واليمين على من أنكر.",
                                 explanation: "القاعدة الأصولية الإثباتية العامة في القضاء.",
                                 example: "تكليف المدعي بتقديم المستندات المثبتة لدعواه.",
-                                crossLinks: "",
+                                crossSysId: "",
+                                crossArt: "",
                                 circulars: ["تعميم إثبات رقم 3"],
                                 judgments: ["مبدأ المحكمة العليا: العبرة بالقرائن القاطعة"]
                             }
@@ -284,18 +311,19 @@
                 systems: [
                     {
                         id: 201,
-                        name: "نظام الشركات",
+                        name: "نظام المحاكم التجارية",
                         status: "ساري",
-                        url: "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/230",
+                        url: "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/237",
                         articles: [
                             {
                                 type: "مادة نظامية",
-                                number: "المادة 1",
-                                text: "تأسيس الشركة يكون وفقاً لأحد الأشكال المنصوص عليها في هذا النظام...",
-                                explanation: "مبدأ تقنين أشكال الشركات التجارية.",
-                                example: "تأسيس شركة مساهمة مقفلة.",
-                                crossLinks: "",
-                                circulars: [],
+                                number: "المادة 16",
+                                text: "تختص المحاكم التجارية بالنظر في المنازعات التي تنشأ بين التجار...",
+                                explanation: "النطاق الموضوعي لاختصاص المحاكم التجارية.",
+                                example: "نزاع بين شركتين.",
+                                crossSysId: "",
+                                crossArt: "",
+                                circulars: ["تعميم تجاري 1"],
                                 judgments: []
                             }
                         ]
@@ -309,12 +337,13 @@
                             {
                                 type: "مادة نظامية",
                                 number: "المادة 80",
-                                text: "لا يجوز لصاحب العمل فصل العامل دون مكافأة أو إشعار إلا في حالات محددة...",
-                                explanation: "حالات الفصل المشدد للسبب المشروع.",
-                                example: "اعتداء العامل على صاحب العمل.",
-                                crossLinks: "المادة 81 من نظام العمل",
-                                circulars: ["تعميم العمالة رقم 45"],
-                                judgments: ["مبدأ العمالي: استحقاق مكافأة نهاية الخدمة عند الفصل التعسفي"]
+                                text: "لا يجوز لصاحب العمل فصل العامل دون مكافأة إلا في حالات محددة...",
+                                explanation: "حالات الفصل المشدد.",
+                                example: "اعتداء العامل.",
+                                crossSysId: "",
+                                crossArt: "",
+                                circulars: ["تعميم عمالة 45"],
+                                judgments: ["مبدأ عمالي: استحقاق مكافأة نهاية الخدمة"]
                             }
                         ]
                     }
@@ -333,12 +362,13 @@
                             {
                                 type: "مادة نظامية",
                                 number: "المادة 34",
-                                text: "يصدر قاضي التنفيذ أمراً بالوفاء خلال خمسة أيام من تاريخ التبلغ...",
-                                explanation: "مهلة التنفيذ الجبري وسندات التنفيذ.",
-                                example: "تبليغ المنفذ ضده بالسداد السريع.",
-                                crossLinks: "المادة 46 من نظام التنفيذ",
-                                circulars: ["تعميم التنفيذ رقم 2"],
-                                judgments: ["مبدأ التنفيذ: جواز إيقاف الخدمات عند عدم الامتثال"]
+                                text: "يصدر قاضي التنفيذ أمراً بالوفاء خلال خمسة أيام...",
+                                explanation: "مهلة التنفيذ الجبري.",
+                                example: "تبليغ المنفذ ضده.",
+                                crossSysId: "",
+                                crossArt: "",
+                                circulars: ["تعميم تنفيذ 2"],
+                                judgments: ["مبدأ التنفيذ: جواز إيقاف الخدمات"]
                             }
                         ]
                     }
@@ -346,11 +376,29 @@
             }
         ];
 
+        let currentGlobalTab = 'systems'; // 'systems' | 'judgments' | 'circulars' | 'principles'
         let currentCatId = null;
         let currentSysId = null;
 
         function saveData() {
-            localStorage.setItem('marja_master_complete_db_v2', JSON.stringify(db));
+            localStorage.setItem('marja_master_complete_db_v3', JSON.stringify(db));
+            render();
+        }
+
+        function switchGlobalTab(tab) {
+            currentGlobalTab = tab;
+            currentCatId = null;
+            currentSysId = null;
+
+            // Update tab styles
+            ['systems', 'judgments', 'circulars', 'principles'].forEach(t => {
+                let btn = document.getElementById(`tabBtn-${t}`);
+                if (t === tab) {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-gold-500 text-emerald-950 shadow";
+                } else {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-800 text-gold-300 hover:bg-emerald-700 border border-gold-500/30";
+                }
+            });
             render();
         }
 
@@ -376,6 +424,15 @@
             return match ? parseInt(match[0], 10) : 999999;
         }
 
+        function findSystemById(sysId) {
+            let found = null;
+            db.forEach(c => {
+                let s = c.systems.find(x => x.id == sysId);
+                if (s) found = s;
+            });
+            return found;
+        }
+
         function render() {
             const container = document.getElementById('appContainer');
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
@@ -384,6 +441,14 @@
             const bcSys = document.getElementById('breadcrumbSystem');
 
             updateDropdowns();
+
+            // If user selected a global external tab other than 'systems'
+            if (currentGlobalTab !== 'systems' && currentCatId === null && currentSysId === null) {
+                breadcrumbBar.classList.add('hidden');
+                breadcrumbBar.classList.remove('flex');
+                renderGlobalTabContent(container, searchVal, currentGlobalTab);
+                return;
+            }
 
             if (currentCatId === null && currentSysId === null) {
                 breadcrumbBar.classList.add('hidden');
@@ -415,7 +480,7 @@
                 }
             }
 
-            // LEVEL 3: Articles/Contents View (Automatically Sorted)
+            // LEVEL 3: Articles/Contents View (Sorted implicitly)
             if (currentSysId !== null && currentCatId !== null) {
                 let cat = db.find(c => c.id === currentCatId);
                 let sys = cat ? cat.systems.find(s => s.id === currentSysId) : null;
@@ -430,15 +495,13 @@
                         art.text.toLowerCase().includes(searchVal) || 
                         art.type.toLowerCase().includes(searchVal) ||
                         (art.explanation && art.explanation.toLowerCase().includes(searchVal)) ||
-                        (art.example && art.example.toLowerCase().includes(searchVal)) ||
-                        art.circulars.some(c => c.toLowerCase().includes(searchVal)) ||
-                        art.judgments.some(j => j.toLowerCase().includes(searchVal))
+                        (art.example && art.example.toLowerCase().includes(searchVal))
                     );
                 }
 
                 let articlesHTML = '';
                 if (sortedArticles.length === 0) {
-                    articlesHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد مواد أو سوابق مسجلة داخل هذا النظام</div>`;
+                    articlesHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد محتويات مسجلة داخل هذا النظام</div>`;
                 } else {
                     sortedArticles.forEach(art => {
                         let badgeColor = art.type === 'سابقة قضائية' ? 'bg-amber-100 text-amber-900 border-amber-300' :
@@ -446,15 +509,23 @@
                                          art.type === 'قرار أو مبدأ' ? 'bg-gold-500/20 text-emerald-950 border-gold-500/40' :
                                          'bg-emerald-100 text-emerald-900 border-emerald-300';
 
+                        let linkedSys = art.crossSysId ? findSystemById(art.crossSysId) : null;
+                        let crossLinkHTML = '';
+                        if (linkedSys && art.crossArt) {
+                            crossLinkHTML = `<a href="#" onclick="openSystemViewByExternalId(${linkedSys.id}); return false;" class="text-xs bg-gold-500/20 hover:bg-gold-500/30 text-emerald-950 px-2.5 py-1 rounded-lg border border-gold-500/30 inline-flex items-center gap-1 font-bold">🔗 يرتبط بـ: ${linkedSys.name} (${art.crossArt}) ↗</a>`;
+                        } else if (art.crossSysId || art.crossArt) {
+                            crossLinkHTML = `<span class="text-xs bg-gold-500/20 text-emerald-950 px-2.5 py-1 rounded-lg border border-gold-500/30">🔗 ارتباط: ${art.crossArt || ''}</span>`;
+                        }
+
                         articlesHTML += `
                             <div class="bg-paper p-5 rounded-2xl border-r-4 border-emerald-800 space-y-3 shadow-sm">
                                 <div class="flex justify-between items-center border-b pb-2 border-gold-500/25">
                                     <div class="flex items-center gap-2">
                                         <span class="text-xs px-2.5 py-1 rounded-lg font-bold border ${badgeColor}">${art.type}</span>
-                                        <span class="font-black text-emerald-950 text-base">📌 ${art.number}</span>
+                                        <span class="font-black text-emerald-950 text-base">${art.number}</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        ${art.crossLinks ? `<span class="text-xs bg-gold-500/20 text-emerald-950 px-2 py-0.5 rounded-lg border border-gold-500/30">🔗 ارتباط: ${art.crossLinks}</span>` : ''}
+                                        ${crossLinkHTML}
                                         <button onclick="openEditArticleModal(${sys.id}, ${art.originalIndex})" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-lg font-bold">✏️ تعديل</button>
                                         <button onclick="deleteArticle(${sys.id}, ${art.originalIndex})" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg font-bold">حذف</button>
                                     </div>
@@ -463,14 +534,14 @@
                                 
                                 ${(art.explanation || art.example) ? `
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2">
-                                        ${art.explanation ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>💡 الشرح القانوني:</strong> ${art.explanation}</div>` : ''}
+                                        ${art.explanation ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>💡 الشرح (يشمل اللائحة):</strong> ${art.explanation}</div>` : ''}
                                         ${art.example ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>📝 مثال تطبيقي:</strong> ${art.example}</div>` : ''}
                                     </div>
                                 ` : ''}
 
                                 <div class="space-y-1.5 pt-2">
                                     ${art.circulars && art.circulars.length > 0 ? `<div class="text-xs bg-blue-50/70 p-2.5 rounded-xl border border-blue-900/10 text-blue-950"><strong>📢 التعاميم المرتبطة:</strong> ${art.circulars.join(' | ')}</div>` : ''}
-                                    ${art.judgments && art.judgments.length > 0 ? `<div class="text-xs bg-amber-50/70 p-2.5 rounded-xl border border-amber-900/10 text-amber-950"><strong>⚖️ السوابق القضائية المستقلة:</strong> ${art.judgments.join(' | ')}</div>` : ''}
+                                    ${art.judgments && art.judgments.length > 0 ? `<div class="text-xs bg-amber-50/70 p-2.5 rounded-xl border border-amber-900/10 text-amber-950"><strong>⚖️ السوابق القضائية:</strong> ${art.judgments.join(' | ')}</div>` : ''}
                                 </div>
                             </div>
                         `;
@@ -493,8 +564,8 @@
                             </div>
                         </div>
                         <div class="flex justify-between items-center">
-                            <h3 class="text-sm font-black text-emerald-900">المواد، السوابق والتعاميم المرتبطة (مترتبة تلقائياً):</h3>
-                            <button onclick="openArticleModalPreselect(${sys.id})" class="bg-emerald-900 hover:bg-emerald-800 text-gold-400 text-xs font-bold px-3.5 py-2 rounded-xl">+ إضافة مادة / سابقة / تعميم</button>
+                            <h3 class="text-sm font-black text-emerald-900">محتويات ونصوص النظام:</h3>
+                            <button onclick="openArticleModalPreselect(${sys.id})" class="bg-emerald-900 hover:bg-emerald-800 text-gold-400 text-xs font-bold px-3.5 py-2 rounded-xl">+ إضافة محتوى</button>
                         </div>
                         <div class="space-y-4">${articlesHTML}</div>
                     </div>
@@ -521,7 +592,7 @@
                                 <div class="space-y-2">
                                     <div class="flex justify-between items-center">
                                         <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
-                                        <span class="text-xs font-bold text-gold-600 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">📚 ${sys.articles.length} عنصر مسجل</span>
+                                        <span class="text-xs font-bold text-gold-600 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">📚 ${sys.articles.length} عنصر</span>
                                     </div>
                                     <h3 class="text-xl font-black text-emerald-950 pt-2 cursor-pointer hover:text-gold-600" onclick="navigateSystem(${sys.id})">${sys.name}</h3>
                                     ${sys.url ? `<a href="${sys.url}" target="_blank" class="text-xs text-gold-600 hover:underline inline-block pt-1">🔗 رابط النظام الرسمي ↗</a>` : ''}
@@ -558,7 +629,7 @@
                     </div>
                 `;
             } 
-            // LEVEL 1: Home View (Categories Grid)
+            // LEVEL 1: Home View
             else {
                 let filteredCats = db.filter(c => 
                     c.name.toLowerCase().includes(searchVal) || 
@@ -599,6 +670,69 @@
             }
         }
 
+        // Render global external tabs (Judgments, Circulars, Principles)
+        function renderGlobalTabContent(container, searchVal, typeKey) {
+            let titleMap = {
+                'judgments': 'السوابق القضائية المعتمدة',
+                'circulars': 'التعاميم القضائية والإدارية',
+                'principles': 'المبادئ والقرارات القضائية'
+            };
+            let targetType = {
+                'judgments': 'سابقة قضائية',
+                'circulars': 'تعميم',
+                'principles': 'قرار أو مبدأ'
+            }[typeKey];
+
+            let itemsHTML = '';
+            db.forEach(c => {
+                c.systems.forEach(s => {
+                    s.articles.filter(a => a.type === targetType).forEach(art => {
+                        if (searchVal && !art.text.toLowerCase().includes(searchVal) && !art.number.toLowerCase().includes(searchVal)) return;
+                        itemsHTML += `
+                            <div class="bg-white p-5 rounded-2xl border border-gold-500/30 shadow-sm space-y-3">
+                                <div class="flex justify-between items-center border-b pb-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs bg-gold-500/20 text-emerald-950 font-bold px-3 py-1 rounded-lg border border-gold-500/30">النظام: ${s.name}</span>
+                                        <span class="font-black text-emerald-950 text-base">${art.number}</span>
+                                    </div>
+                                    <button onclick="openSystemViewByExternalId(${s.id})" class="text-xs bg-emerald-900 text-gold-400 px-3 py-1.5 rounded-xl font-bold">الانتقال للنظام ↗</button>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-800 leading-relaxed font-medium">${art.text}</p>
+                                ${art.explanation ? `<div class="text-xs bg-paper p-3 rounded-xl border"><strong>الشرح:</strong> ${art.explanation}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                });
+            });
+
+            if (!itemsHTML) {
+                itemsHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد محتويات مسجلة ضمن هذا القسم حالياً</div>`;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-3xl border border-gold-500/30 shadow-sm">
+                        <h2 class="text-2xl font-black text-emerald-950">${titleMap[typeKey]}</h2>
+                        <p class="text-xs text-gray-500 mt-1">عرض جميع العناصر المصنفة خارجياً لسهولة الوصول السريع</p>
+                    </div>
+                    <div class="space-y-4">${itemsHTML}</div>
+                </div>
+            `;
+        }
+
+        function openSystemViewByExternalId(sysId) {
+            currentGlobalTab = 'systems';
+            // Find category
+            db.forEach(c => {
+                let s = c.systems.find(x => x.id === sysId);
+                if (s) {
+                    currentCatId = c.id;
+                    currentSysId = s.id;
+                }
+            });
+            render();
+        }
+
         // Category Modals
         function openCategoryModal() {
             document.getElementById('editCatId').value = '';
@@ -610,7 +744,7 @@
             let cat = db.find(c => c.id === id);
             if (!cat) return;
             document.getElementById('editCatId').value = cat.id;
-            document.getElementById('catModalTitle').innerText = 'تعديل اسم التصنيف الرئيسي';
+            document.getElementById('catModalTitle').innerText = 'تعديل اسم التصنيف';
             document.getElementById('catNameInput').value = cat.name;
             document.getElementById('categoryModal').classList.remove('hidden');
         }
@@ -629,7 +763,7 @@
             closeCategoryModal();
         }
         function deleteCategory(id) {
-            if (confirm('حذف هذا التصنيف بكافة أنظمته ومواده؟')) {
+            if (confirm('حذف هذا التصنيف بكافة أنظمته؟')) {
                 db = db.filter(c => c.id !== id);
                 if (currentCatId === id) navigateHome();
                 else saveData();
@@ -708,14 +842,15 @@
         // Article Modals
         function openArticleModal() {
             document.getElementById('editArtIndex').value = '';
-            document.getElementById('artModalTitle').innerText = 'إضافة مادة / سابقة قضائية / تعميم / قرار';
+            document.getElementById('artModalTitle').innerText = 'إضافة محتوى قانوني';
             if (currentSysId !== null) document.getElementById('artSysSelect').value = currentSysId;
             document.getElementById('artTypeInput').value = 'مادة نظامية';
             document.getElementById('artNumberInput').value = '';
             document.getElementById('artTextInput').value = '';
             document.getElementById('artExpInput').value = '';
             document.getElementById('artExInput').value = '';
-            document.getElementById('artCrossInput').value = '';
+            document.getElementById('crossSysSelect').value = '';
+            document.getElementById('crossArtInput').value = '';
             document.getElementById('artCircInput').value = '';
             document.getElementById('artJudgeInput').value = '';
             document.getElementById('articleModal').classList.remove('hidden');
@@ -725,23 +860,20 @@
             document.getElementById('artSysSelect').value = sysId;
         }
         function openEditArticleModal(sysId, artIndex) {
-            let sys = null;
-            db.forEach(c => {
-                let s = c.systems.find(x => x.id === sysId);
-                if (s) sys = s;
-            });
+            let sys = findSystemById(sysId);
             if (!sys || !sys.articles[artIndex]) return;
             let art = sys.articles[artIndex];
 
             document.getElementById('editArtIndex').value = `${sysId}_${artIndex}`;
-            document.getElementById('artModalTitle').innerText = 'تعديل المحتوى';
+            document.getElementById('artModalTitle').innerText = 'تعديل المحتوى القانوني';
             document.getElementById('artSysSelect').value = sysId;
             document.getElementById('artTypeInput').value = art.type || 'مادة نظامية';
             document.getElementById('artNumberInput').value = art.number;
             document.getElementById('artTextInput').value = art.text;
             document.getElementById('artExpInput').value = art.explanation || '';
             document.getElementById('artExInput').value = art.example || '';
-            document.getElementById('artCrossInput').value = art.crossLinks || '';
+            document.getElementById('crossSysSelect').value = art.crossSysId || '';
+            document.getElementById('crossArtInput').value = art.crossArt || '';
             document.getElementById('artCircInput').value = art.circulars ? art.circulars.join(' | ') : '';
             document.getElementById('artJudgeInput').value = art.judgments ? art.judgments.join(' | ') : '';
             document.getElementById('articleModal').classList.remove('hidden');
@@ -755,32 +887,25 @@
             let text = document.getElementById('artTextInput').value.trim();
             let explanation = document.getElementById('artExpInput').value.trim();
             let example = document.getElementById('artExInput').value.trim();
-            let crossLinks = document.getElementById('artCrossInput').value.trim();
+            let crossSysId = document.getElementById('crossSysSelect').value;
+            let crossArt = document.getElementById('crossArtInput').value.trim();
             let circRaw = document.getElementById('artCircInput').value.trim();
             let judgeRaw = document.getElementById('artJudgeInput').value.trim();
             let circulars = circRaw ? circRaw.split('|').map(s => s.trim()) : [];
             let judgments = judgeRaw ? judgeRaw.split('|').map(s => s.trim()) : [];
 
-            if (!number || !text) return alert('أدخل رقم المعرّف أو المادة ونصها');
+            if (!number || !text) return alert('أدخل رقم المادة ونصها');
 
-            let targetSys = null;
-            db.forEach(c => {
-                let s = c.systems.find(x => x.id === sysId);
-                if (s) targetSys = s;
-            });
+            let targetSys = findSystemById(sysId);
             if (!targetSys) return alert('اختر نظاماً صحيحاً');
 
-            let newArt = { type, number, text, explanation, example, crossLinks, circulars, judgments };
+            let newArt = { type, number, text, explanation, example, crossSysId, crossArt, circulars, judgments };
 
             if (editIndexVal) {
                 let parts = editIndexVal.split('_');
                 let oldSysId = Number(parts[0]);
                 let oldArtIdx = Number(parts[1]);
-                let oldSys = null;
-                db.forEach(c => {
-                    let s = c.systems.find(x => x.id === oldSysId);
-                    if (s) oldSys = s;
-                });
+                let oldSys = findSystemById(oldSysId);
 
                 if (oldSysId === sysId) {
                     oldSys.articles[oldArtIdx] = newArt;
@@ -807,6 +932,8 @@
         function updateDropdowns() {
             let catSel = document.getElementById('sysCatSelect');
             let artSysSel = document.getElementById('artSysSelect');
+            let crossSysSel = document.getElementById('crossSysSelect');
+
             if (catSel) {
                 catSel.innerHTML = '';
                 db.forEach(c => {
@@ -824,6 +951,17 @@
                         opt.value = s.id;
                         opt.innerText = `${c.name} > ${s.name}`;
                         artSysSel.appendChild(opt);
+                    });
+                });
+            }
+            if (crossSysSel) {
+                crossSysSel.innerHTML = '<option value="">-- اختر النظام المرتبط --</option>';
+                db.forEach(c => {
+                    c.systems.forEach(s => {
+                        let opt = document.createElement('option');
+                        opt.value = s.id;
+                        opt.innerText = `${s.name}`;
+                        crossSysSel.appendChild(opt);
                     });
                 });
             }
