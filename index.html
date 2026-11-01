@@ -39,7 +39,7 @@
     <!-- Header / Navbar -->
     <header class="bg-emerald-950 border-b-2 border-gold-500 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="goHome()">
+            <div class="flex items-center space-x-3 space-x-reverse">
                 <div class="w-12 h-12 rounded-full border-2 border-gold-500 overflow-hidden flex items-center justify-center bg-emerald-900 shadow-md">
                     <svg viewBox="0 0 24 24" class="w-8 h-8 text-gold-400 fill-current" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 2.18l7 3.82v5c0 4.52-2.98 8.69-7 9.82-4.02-1.13-7-5.3-7-9.82v-5l7-3.82zM11 10h2v6h-2v-6zm0-3h2v2h-2V7z"/>
@@ -56,33 +56,27 @@
                     + نظام جديد
                 </button>
                 <button onclick="openContentModal()" class="bg-emerald-800 hover:bg-emerald-700 text-gold-400 border border-gold-500/40 px-4 py-2 rounded-xl text-sm shadow-md transition">
-                    + إضافة مادة
+                    + إضافة مادة وتطوير
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-        <!-- Breadcrumb / Back Bar (Hidden on Home) -->
-        <div id="navigationBar" class="hidden items-center justify-between bg-white px-4 py-3 rounded-xl border border-gold-500/30 shadow-sm">
-            <button onclick="goHome()" class="text-xs font-bold text-emerald-900 flex items-center gap-1 hover:text-gold-600 transition">
-                <span>←</span> العودة لقائمة الأنظمة الرئيسية
-            </button>
-            <span id="currentBreadcrumb" class="text-xs font-black text-gold-600 bg-gold-500/10 px-3 py-1 rounded-lg border border-gold-500/20"></span>
-        </div>
 
         <!-- Search Bar -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gold-500/20">
             <div class="relative">
-                <input type="text" id="searchInput" oninput="renderApp()" placeholder="ابحث باسم النظام، نص المادة، الشرح، أو السوابق القضائية..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                <input type="text" id="searchInput" oninput="renderAll()" placeholder="ابحث باسم النظام، المبدأ القضائي، نص المادة، أو التعاميم..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
                 <span class="absolute right-3.5 top-4 text-gold-600">🔍</span>
             </div>
         </div>
 
-        <!-- Dynamic Container (Home Systems Grid or Specific System View) -->
-        <div id="appContainer"></div>
+        <!-- Dynamic Grouped Content by Field -->
+        <div id="groupedSystemsContainer" class="space-y-8">
+            <!-- Dynamically Loaded Groups -->
+        </div>
 
     </main>
 
@@ -102,12 +96,12 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">اسم النظام أو التصنيف القضائي</label>
-                    <input type="text" id="sysName" placeholder="مثال: نظام الشركات" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                    <input type="text" id="sysName" placeholder="مثال: مبادئ الأحكام الجزائية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">المجال الرئيسي</label>
-                        <input type="text" id="sysField" placeholder="مثال: القانون التجاري..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="sysField" placeholder="مثال: القضاء الجزائي..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">الحالة</label>
@@ -135,17 +129,17 @@
             <input type="hidden" id="editArtIndex" value="">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-emerald-900 mb-1">اختر النظام التابع له المادة</label>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">اختر النظام أو فرع المبادئ</label>
                     <select id="contentSysId" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة (لترتيبها تلقائياً)</label>
-                        <input type="text" id="artNumber" placeholder="مثال: المادة 2" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة أو عنوان المبدأ</label>
+                        <input type="text" id="artNumber" placeholder="مثال: المادة 1" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">المواد المرتبطة (اختياري)</label>
-                        <input type="text" id="artCrossLinks" placeholder="مثال: المادة 75" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="artCrossLinks" placeholder="مثال: المادة 75 من المرافعات" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
                 <div>
@@ -192,15 +186,6 @@
                 status: "ساري",
                 articles: [
                     {
-                        number: "المادة 1",
-                        text: "تطبق المحاكم على الدعاوى المعروضة عليها أحكام الشريعة الإسلامية...",
-                        explanation: "الأصل في التقاضي استمداد الأحكام الشرعية.",
-                        example: "الرجوع للمصادر الفقهية المعتمدة.",
-                        crossLinks: "",
-                        circulars: ["تعميم رقم 12 أ"],
-                        judgments: []
-                    },
-                    {
                         number: "المادة 75",
                         text: "إذا دفع أحد الأطراف بعدم الاختصاص النوعي وجب على المحكمة أن تفصل فيه بحكم مستقل...",
                         explanation: "قواعد الاختصاص النوعي من النظام العام وتثار في أي مرحلة من مراحل الدعوى.",
@@ -213,177 +198,128 @@
             }
         ];
 
-        let currentActiveSystemId = null; // null means Home (Grid of Systems)
-
         function saveData() {
             localStorage.setItem('marja_master_db', JSON.stringify(db));
-            renderApp();
+            renderAll();
         }
 
-        function goHome() {
-            currentActiveSystemId = null;
-            document.getElementById('navigationBar').classList.add('hidden');
-            document.getElementById('navigationBar').classList.remove('flex');
-            renderApp();
-        }
-
-        function openSystemView(id) {
-            currentActiveSystemId = id;
-            document.getElementById('navigationBar').classList.remove('hidden');
-            document.getElementById('navigationBar').classList.add('flex');
-            renderApp();
-        }
-
-        // Helper to extract numeric value from article number string (e.g. "المادة 75" -> 75) for sorting
-        function extractNumber(str) {
-            let match = str.match(/\d+/);
-            return match ? parseInt(match[0], 10) : 999999;
-        }
-
-        function renderApp() {
-            const container = document.getElementById('appContainer');
+        function renderAll() {
+            const container = document.getElementById('groupedSystemsContainer');
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
             container.innerHTML = '';
 
-            updateDropdown();
+            let fieldsMap = {};
 
-            // If a specific system is selected
-            if (currentActiveSystemId !== null) {
-                let sys = db.find(s => s.id === currentActiveSystemId);
-                if (!sys) { goHome(); return; }
+            db.forEach(sys => {
+                let matchSys = sys.name.toLowerCase().includes(searchVal) || sys.field.toLowerCase().includes(searchVal);
+                let filteredArticles = sys.articles.filter((a, idx) => 
+                    a.number.toLowerCase().includes(searchVal) || 
+                    a.text.toLowerCase().includes(searchVal) || 
+                    (a.explanation && a.explanation.toLowerCase().includes(searchVal)) ||
+                    (a.example && a.example.toLowerCase().includes(searchVal)) ||
+                    (a.crossLinks && a.crossLinks.toLowerCase().includes(searchVal)) ||
+                    a.circulars.some(c => c.toLowerCase().includes(searchVal)) ||
+                    a.judgments.some(j => j.toLowerCase().includes(searchVal))
+                );
 
-                document.getElementById('currentBreadcrumb').innerText = sys.name;
-
-                // Filter & Sort articles automatically
-                let sortedArticles = [...sys.articles].map((art, originalIndex) => ({ ...art, originalIndex }))
-                    .sort((a, b) => extractNumber(a.number) - extractNumber(b.number));
-
-                if (searchVal) {
-                    sortedArticles = sortedArticles.filter(art => 
-                        art.number.toLowerCase().includes(searchVal) || 
-                        art.text.toLowerCase().includes(searchVal) || 
-                        (art.explanation && art.explanation.toLowerCase().includes(searchVal)) ||
-                        (art.example && art.example.toLowerCase().includes(searchVal)) ||
-                        (art.crossLinks && art.crossLinks.toLowerCase().includes(searchVal)) ||
-                        art.circulars.some(c => c.toLowerCase().includes(searchVal)) ||
-                        art.judgments.some(j => j.toLowerCase().includes(searchVal))
-                    );
+                if (matchSys || filteredArticles.length > 0) {
+                    if (!fieldsMap[sys.field]) fieldsMap[sys.field] = [];
+                    // Keep original indices for editing reference
+                    let mappedArticles = sys.articles.map((art, originalIndex) => ({ ...art, originalIndex }));
+                    if (!matchSys) {
+                        mappedArticles = mappedArticles.filter((_, idx) => filteredArticles.some(fa => sys.articles.indexOf(fa) === idx));
+                    }
+                    fieldsMap[sys.field].push({ ...sys, displayedArticles: mappedArticles });
                 }
+            });
 
-                let articlesHTML = '';
-                if (sortedArticles.length === 0) {
-                    articlesHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">لا توجد مواد مطابقة داخل هذا النظام</div>`;
-                } else {
-                    sortedArticles.forEach(art => {
-                        articlesHTML += `
-                            <div class="bg-paper p-5 rounded-2xl border-r-4 border-emerald-800 space-y-3 shadow-sm">
-                                <div class="flex justify-between items-center border-b pb-2 border-gold-500/20">
-                                    <span class="font-black text-emerald-950 text-lg">📜 ${art.number}</span>
-                                    <div class="flex items-center gap-2">
-                                        ${art.crossLinks ? `<span class="text-xs bg-gold-500/20 text-emerald-950 px-2.5 py-1 rounded-lg border border-gold-500/30">🔗 ارتباط: ${art.crossLinks}</span>` : ''}
-                                        <button onclick="openEditArticleModal(${sys.id}, ${art.originalIndex})" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-lg font-bold">✏️ تعديل</button>
-                                        <button onclick="deleteArticle(${sys.id}, ${art.originalIndex})" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg font-bold">حذف</button>
-                                    </div>
-                                </div>
-                                <p class="text-sm text-gray-800 leading-relaxed font-medium">${art.text}</p>
+            if (Object.keys(fieldsMap).length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">لا توجد نتائج مطابقة لبحثك</div>`;
+                return;
+            }
 
-                                ${(art.explanation || art.example) ? `
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2">
-                                        ${art.explanation ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>💡 الشرح القانوني:</strong> ${art.explanation}</div>` : ''}
-                                        ${art.example ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>📝 مثال تطبيقي:</strong> ${art.example}</div>` : ''}
-                                    </div>
-                                ` : ''}
-
-                                <div class="space-y-1.5 pt-2">
-                                    ${art.circulars && art.circulars.length > 0 ? `
-                                        <div class="text-xs bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-900/10 text-emerald-900">
-                                            <strong>📢 اللوائح والتعاميم:</strong> ${art.circulars.join(' | ')}
-                                        </div>
-                                    ` : ''}
-                                    ${art.judgments && art.judgments.length > 0 ? `
-                                        <div class="text-xs bg-amber-50/60 p-2.5 rounded-xl border border-amber-900/10 text-amber-950">
-                                            <strong>⚖️ السوابق القضائية:</strong> ${art.judgments.join(' | ')}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                container.innerHTML = `
-                    <div class="bg-white rounded-3xl border border-gold-500/40 shadow-md p-6 sm:p-8 space-y-6">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-4">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
-                                    <span class="text-xs text-gray-500 font-medium">📁 مجال: ${sys.field}</span>
-                                </div>
-                                <h2 class="text-2xl sm:text-3xl font-black text-emerald-950 mt-1">${sys.name}</h2>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openEditSystemModal(${sys.id})" class="text-xs bg-gold-500/20 hover:bg-gold-500/30 text-emerald-950 px-3.5 py-2 rounded-xl font-bold border border-gold-500/40">✏️ تعديل بيانات النظام</button>
-                                <button onclick="deleteSystem(${sys.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-3 py-2 bg-red-50 rounded-xl">حذف النظام</button>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-black text-emerald-900">مواد ولوائح النظام (مرتبة تلقائياً):</h3>
-                            <button onclick="openContentModalPreselect(${sys.id})" class="bg-emerald-900 hover:bg-emerald-800 text-gold-400 text-xs font-bold px-3.5 py-2 rounded-xl">
-                                + إضافة مادة لهذا النظام
-                            </button>
-                        </div>
-
-                        <div class="space-y-4">
-                            ${articlesHTML}
-                        </div>
+            for (let field in fieldsMap) {
+                let groupWrapper = document.createElement('div');
+                groupWrapper.className = 'space-y-4';
+                
+                let groupHeader = `
+                    <div class="flex items-center gap-3 border-b-2 border-gold-500/40 pb-2">
+                        <span class="text-lg">📁</span>
+                        <h2 class="text-xl font-black text-emerald-950">مجال: ${field}</h2>
                     </div>
                 `;
 
-            } else {
-                // Home: Grid of All Systems
-                let filteredSystems = db.filter(sys => {
-                    let matchSys = sys.name.toLowerCase().includes(searchVal) || sys.field.toLowerCase().includes(searchVal);
-                    let matchArticles = sys.articles.some(a => 
-                        a.number.toLowerCase().includes(searchVal) || 
-                        a.text.toLowerCase().includes(searchVal) ||
-                        (a.explanation && a.explanation.toLowerCase().includes(searchVal))
-                    );
-                    return matchSys || matchArticles;
-                });
+                let systemsGrid = document.createElement('div');
+                systemsGrid.className = 'space-y-6 mt-4';
 
-                if (filteredSystems.length === 0) {
-                    container.innerHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">لا توجد أنظمة مطابقة لبحثك</div>`;
-                    return;
-                }
+                fieldsMap[field].forEach(sys => {
+                    let sysCard = document.createElement('div');
+                    sysCard.className = 'bg-white rounded-2xl border border-gold-500/30 shadow-sm p-6 space-y-4';
+                    
+                    let articlesHTML = '';
+                    if (sys.displayedArticles.length === 0) {
+                        articlesHTML = `<p class="text-xs text-gray-400 italic">لم تدرج مواد تحت هذا النظام بعد.</p>`;
+                    } else {
+                        sys.displayedArticles.forEach(art => {
+                            articlesHTML += `
+                                <div class="bg-paper p-4 rounded-xl border-r-4 border-emerald-800 space-y-3 relative">
+                                    <div class="flex justify-between items-center border-b pb-2 border-gold-500/10">
+                                        <span class="font-bold text-emerald-950 text-base">📜 ${art.number}</span>
+                                        <div class="flex items-center gap-2">
+                                            ${art.crossLinks ? `<span class="text-xs bg-gold-500/20 text-emerald-950 px-2.5 py-1 rounded-lg border border-gold-500/30">🔗 ارتباط: ${art.crossLinks}</span>` : ''}
+                                            <button onclick="openEditArticleModal(${sys.id}, ${art.originalIndex})" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-2 py-1 rounded font-bold">✏️ تعديل</button>
+                                            <button onclick="deleteArticle(${sys.id}, ${art.originalIndex})" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-bold">حذف</button>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-800 leading-relaxed font-medium">${art.text}</p>
 
-                let gridHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
-                filteredSystems.forEach(sys => {
-                    gridHTML += `
-                        <div class="bg-white rounded-3xl border border-gold-500/30 shadow-sm p-6 sm:p-7 flex flex-col justify-between space-y-4 hover:shadow-md transition">
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
-                                    <span class="text-xs font-bold text-gold-600 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">📚 ${sys.articles.length} مواد مسجلة</span>
+                                    ${(art.explanation || art.example) ? `
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2">
+                                            ${art.explanation ? `<div class="bg-white p-2.5 rounded-lg border border-gray-200"><strong>💡 الشرح القانوني:</strong> ${art.explanation}</div>` : ''}
+                                            ${art.example ? `<div class="bg-white p-2.5 rounded-lg border border-gray-200"><strong>📝 مثال تطبيقي:</strong> ${art.example}</div>` : ''}
+                                        </div>
+                                    ` : ''}
+
+                                    <div class="space-y-1.5 pt-2">
+                                        ${art.circulars && art.circulars.length > 0 ? `
+                                            <div class="text-xs bg-emerald-50/60 p-2 rounded-lg border border-emerald-900/10 text-emerald-900">
+                                                <strong>📢 اللوائح والتعاميم:</strong> ${art.circulars.join(' | ')}
+                                            </div>
+                                        ` : ''}
+                                        ${art.judgments && art.judgments.length > 0 ? `
+                                            <div class="text-xs bg-amber-50/60 p-2 rounded-lg border border-amber-900/10 text-amber-950">
+                                                <strong>⚖️ السوابق القضائية:</strong> ${art.judgments.join(' | ')}
+                                            </div>
+                                        ` : ''}
+                                    </div>
                                 </div>
-                                <h3 class="text-xl font-black text-emerald-950 pt-2">${sys.name}</h3>
-                                <p class="text-xs text-gray-500 font-medium">المجال: ${sys.field}</p>
+                            `;
+                        });
+                    }
+
+                    sysCard.innerHTML = `
+                        <div class="flex justify-between items-start border-b pb-3">
+                            <div>
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">${sys.status}</span>
+                                <h3 class="text-xl font-black text-emerald-950 mt-1">${sys.name}</h3>
                             </div>
-                            <div class="pt-4 border-t flex items-center justify-between">
-                                <button onclick="openSystemView(${sys.id})" class="bg-emerald-950 hover:bg-emerald-900 text-gold-400 font-bold px-4 py-2.5 rounded-xl text-xs shadow transition flex items-center gap-1.5">
-                                    <span>📖</span> استعراض المواد والأنظمة
-                                </button>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openEditSystemModal(${sys.id})" class="p-2 text-gray-600 hover:text-emerald-950 text-xs font-bold bg-gray-100 rounded-xl" title="تعديل">✏️</button>
-                                    <button onclick="deleteSystem(${sys.id})" class="p-2 text-red-500 hover:text-red-700 text-xs font-bold bg-red-50 rounded-xl" title="حذف">🗑️</button>
-                                </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="openEditSystemModal(${sys.id})" class="text-xs bg-gold-500/20 hover:bg-gold-500/30 text-emerald-950 px-3 py-1.5 rounded-lg font-bold border border-gold-500/40">✏️ تعديل النظام</button>
+                                <button onclick="deleteSystem(${sys.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1">حذف النظام</button>
                             </div>
                         </div>
+                        <div class="space-y-3">
+                            ${articlesHTML}
+                        </div>
                     `;
+                    systemsGrid.appendChild(sysCard);
                 });
-                gridHTML += `</div>`;
-                container.innerHTML = gridHTML;
+
+                groupWrapper.innerHTML = groupHeader;
+                groupWrapper.appendChild(systemsGrid);
+                container.appendChild(groupWrapper);
             }
+            updateDropdown();
         }
 
         // System Modals
@@ -421,11 +357,7 @@
                     sys.status = status;
                 }
             } else {
-                let newSys = { id: Date.now(), name, field, status, articles: [] };
-                db.push(newSys);
-                currentActiveSystemId = newSys.id;
-                document.getElementById('navigationBar').classList.remove('hidden');
-                document.getElementById('navigationBar').classList.add('flex');
+                db.push({ id: Date.now(), name, field, status, articles: [] });
             }
             saveData();
             closeNewSystemModal();
@@ -435,9 +367,6 @@
         function openContentModal() {
             document.getElementById('editArtIndex').value = '';
             document.getElementById('artModalTitle').innerText = 'إضافة مادة أو سابقة قضائية';
-            if (currentActiveSystemId !== null) {
-                document.getElementById('contentSysId').value = currentActiveSystemId;
-            }
             document.getElementById('artNumber').value = '';
             document.getElementById('artText').value = '';
             document.getElementById('artExplanation').value = '';
@@ -446,10 +375,6 @@
             document.getElementById('artCirculars').value = '';
             document.getElementById('artJudgments').value = '';
             document.getElementById('contentModal').classList.remove('hidden');
-        }
-        function openContentModalPreselect(sysId) {
-            openContentModal();
-            document.getElementById('contentSysId').value = sysId;
         }
         function openEditArticleModal(sysId, artIndex) {
             let sys = db.find(s => s.id === sysId);
@@ -490,13 +415,13 @@
             let sys = db.find(s => s.id === sysId);
             if (!sys) return;
 
-            let updatedArt = { number, text, explanation, example, crossLinks, circulars, judgments };
-
             if (editIndexVal) {
                 let parts = editIndexVal.split('_');
                 let oldSysId = Number(parts[0]);
                 let oldArtIdx = Number(parts[1]);
                 let oldSys = db.find(s => s.id === oldSysId);
+
+                let updatedArt = { number, text, explanation, example, crossLinks, circulars, judgments };
 
                 if (oldSysId === sysId) {
                     oldSys.articles[oldArtIdx] = updatedArt;
@@ -505,7 +430,7 @@
                     sys.articles.push(updatedArt);
                 }
             } else {
-                sys.articles.push(updatedArt);
+                sys.articles.push({ number, text, explanation, example, crossLinks, circulars, judgments });
             }
             saveData();
             closeContentModal();
@@ -514,8 +439,7 @@
         function deleteSystem(id) {
             if (confirm('حذف هذا النظام بكافة مواده؟')) {
                 db = db.filter(s => s.id !== id);
-                if (currentActiveSystemId === id) goHome();
-                else saveData();
+                saveData();
             }
         }
 
@@ -531,7 +455,6 @@
 
         function updateDropdown() {
             let sel = document.getElementById('contentSysId');
-            if (!sel) return;
             sel.innerHTML = '';
             db.forEach(sys => {
                 let opt = document.createElement('option');
@@ -541,7 +464,7 @@
             });
         }
 
-        renderApp();
+        renderAll();
     </script>
 </body>
 </html>
