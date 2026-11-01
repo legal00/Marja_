@@ -53,13 +53,13 @@
             
             <div class="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
                 <button onclick="openCategoryModal()" class="bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold px-3 py-2 rounded-xl text-xs shadow-md transition">
-                    + تصنيف
+                    + تصنيف رئيسي
                 </button>
                 <button onclick="openSystemModal()" class="bg-emerald-800 hover:bg-emerald-700 text-gold-400 border border-gold-500/40 px-3 py-2 rounded-xl text-xs shadow-md transition">
-                    + نظام
+                    + نظام جديد
                 </button>
                 <button onclick="openArticleModal()" class="bg-emerald-900 hover:bg-emerald-800 text-gold-300 border border-gold-500/30 px-3 py-2 rounded-xl text-xs shadow-md transition">
-                    + مادة وبحث
+                    + مادة أو مبدأ
                 </button>
             </div>
         </div>
@@ -84,7 +84,7 @@
         <!-- Search Bar -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gold-500/20">
             <div class="relative">
-                <input type="text" id="searchInput" oninput="render()" placeholder="ابحث في التصنيفات، الأنظمة، نص المادة، الشرح، التعاميم، أو السوابق القضائية..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                <input type="text" id="searchInput" oninput="render()" placeholder="ابحث في التصنيفات، الأنظمة، نص المادة، الشرح القانوني، التعاميم، أو السوابق القضائية..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
                 <span class="absolute right-3.5 top-4 text-gold-600">🔍</span>
             </div>
         </div>
@@ -108,8 +108,8 @@
             </div>
             <input type="hidden" id="editCatId" value="">
             <div>
-                <label class="block text-xs font-bold text-emerald-900 mb-1">اسم التصنيف</label>
-                <input type="text" id="catNameInput" placeholder="مثال: الأنظمة التجارية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                <label class="block text-xs font-bold text-emerald-900 mb-1">اسم التصنيف (مثل: الإجراءات القضائية والمرافعات، القضاء الجنائي، الأنظمة التجارية...)</label>
+                <input type="text" id="catNameInput" placeholder="اسم التصنيف..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
             </div>
             <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
                 <button onclick="closeCategoryModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
@@ -133,7 +133,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">اسم النظام</label>
-                    <input type="text" id="sysNameInput" placeholder="مثال: نظام المحاكم التجارية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                    <input type="text" id="sysNameInput" placeholder="مثال: نظام المرافعات الشرعية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">الحالة</label>
@@ -165,12 +165,12 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة</label>
-                        <input type="text" id="artNumberInput" placeholder="مثال: المادة 1" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة أو المبدأ</label>
+                        <input type="text" id="artNumberInput" placeholder="مثال: المادة 75" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">المواد المرتبطة (اختياري)</label>
-                        <input type="text" id="artCrossInput" placeholder="مثال: المادة 5" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">المواد المرتبطة (ارتباط نظامي)</label>
+                        <input type="text" id="artCrossInput" placeholder="مثال: المادة 16 من نظام المحاكم" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
                 <div>
@@ -181,11 +181,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-emerald-50/50 p-3 rounded-xl border border-emerald-900/10">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">الشرح القانوني (اختياري)</label>
-                        <textarea id="artExpInput" rows="2" placeholder="تفسير المادة..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                        <textarea id="artExpInput" rows="2" placeholder="تفسير الحكم والمقاصد..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">مثال تطبيقي (اختياري)</label>
-                        <textarea id="artExInput" rows="2" placeholder="مثال عملي..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                        <textarea id="artExInput" rows="2" placeholder="مثال واقعي عملي..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                     </div>
                 </div>
 
@@ -209,32 +209,54 @@
 
     <!-- Script Logic -->
     <script>
-        let db = JSON.parse(localStorage.getItem('marja_full_complete_db')) || [
+        let db = JSON.parse(localStorage.getItem('marja_master_complete_db')) || [
             {
                 id: 1,
-                name: "الأنظمة التجارية",
+                name: "الإجراءات القضائية والمرافعات",
                 systems: [
                     {
                         id: 101,
+                        name: "نظام المرافعات الشرعية",
+                        status: "ساري",
+                        articles: [
+                            {
+                                number: "المادة 75",
+                                text: "إذا دفع أحد الأطراف بعدم الاختصاص النوعي وجب على المحكمة أن تفصل فيه بحكم مستقل...",
+                                explanation: "قواعد الاختصاص النوعي من النظام العام وتثار في أي مرحلة من مراحل الدعوى.",
+                                example: "الدفع بكون النزاع تجارياً أمام محكمة الأحوال الشخصية.",
+                                crossLinks: "المادة 16 من نظام المحاكم التجارية",
+                                circulars: ["اللائحة التنفيذية لنظام المرافعات"],
+                                judgments: ["مبدأ المحكمة العليا: الدفع بعدم الاختصاص يقبل في أي مرحلة"]
+                            },
+                            {
+                                number: "المادة 1",
+                                text: "تطبق المحاكم على الدعاوى المعروضة عليها أحكام الشريعة الإسلامية...",
+                                explanation: "الأصل في التقاضي استمداد الأحكام الشرعية.",
+                                example: "الرجوع للمصادر الفقهية المعتمدة.",
+                                crossLinks: "",
+                                circulars: ["تعميم رقم 12 أ"],
+                                judgments: []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "الأنظمة التجارية",
+                systems: [
+                    {
+                        id: 201,
                         name: "نظام المحاكم التجارية",
                         status: "ساري",
                         articles: [
                             {
-                                number: "المادة 2",
-                                text: "تطبق المحاكم التجارية أحكام الأنظمة التجارية، وما لم يوجد نص تطبيق أحكام الشريعة...",
-                                explanation: "تحديد مرجعية التطبيق القضائي التجاري.",
-                                example: "الرجوع للعرف التجاري عند غياب النص.",
-                                crossLinks: "المادة 1",
-                                circulars: ["اللائحة التنفيذية للمحاكم التجارية"],
-                                judgments: ["مبدأ المحكمة العليا: العبرة بالقصود المعنوية"]
-                            },
-                            {
                                 number: "المادة 1",
                                 text: "تختص المحاكم التجارية بالنظر في المنازعات التي تنشأ بين التجار...",
-                                explanation: "نطاق الاختصاص النوعي.",
-                                example: "نزاع بين شركتين.",
+                                explanation: "النطاق الموضوعي لاختصاص المحاكم التجارية.",
+                                example: "نزاع بين شركتين مقاولات.",
                                 crossLinks: "",
-                                circulars: ["تعميم رقم 5"],
+                                circulars: ["تعميم تجاري رقم 1"],
                                 judgments: []
                             }
                         ]
@@ -247,7 +269,7 @@
         let currentSysId = null;
 
         function saveData() {
-            localStorage.setItem('marja_full_complete_db', JSON.stringify(db));
+            localStorage.setItem('marja_master_complete_db', JSON.stringify(db));
             render();
         }
 
@@ -312,7 +334,7 @@
                 }
             }
 
-            // LEVEL 3: Articles View
+            // LEVEL 3: Articles View (Inside a System - Automatically Sorted)
             if (currentSysId !== null && currentCatId !== null) {
                 let cat = db.find(c => c.id === currentCatId);
                 let sys = cat ? cat.systems.find(s => s.id === currentSysId) : null;
@@ -386,7 +408,7 @@
                     </div>
                 `;
             } 
-            // LEVEL 2: Systems View
+            // LEVEL 2: Systems View (Inside a Category)
             else if (currentCatId !== null) {
                 let cat = db.find(c => c.id === currentCatId);
                 if (!cat) { navigateHome(); return; }
@@ -443,7 +465,7 @@
                     </div>
                 `;
             } 
-            // LEVEL 1: Home View
+            // LEVEL 1: Home View (Categories Grid)
             else {
                 let filteredCats = db.filter(c => 
                     c.name.toLowerCase().includes(searchVal) || 
