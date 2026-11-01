@@ -39,7 +39,7 @@
     <!-- Header / Navbar -->
     <header class="bg-emerald-950 border-b-2 border-gold-500 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="goHome()">
+            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="navigateHome()">
                 <div class="w-12 h-12 rounded-full border-2 border-gold-500 overflow-hidden flex items-center justify-center bg-emerald-900 shadow-md">
                     <svg viewBox="0 0 24 24" class="w-8 h-8 text-gold-400 fill-current" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 2.18l7 3.82v5c0 4.52-2.98 8.69-7 9.82-4.02-1.13-7-5.3-7-9.82v-5l7-3.82zM11 10h2v6h-2v-6zm0-3h2v2h-2V7z"/>
@@ -52,11 +52,14 @@
             </div>
             
             <div class="flex items-center space-x-3 space-x-reverse">
-                <button onclick="openNewSystemModal()" class="bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold px-4 py-2 rounded-xl text-sm shadow-md transition">
+                <button onclick="openCategoryModal()" class="bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition">
+                    + تصنيف رئيسي
+                </button>
+                <button onclick="openSystemModal()" class="bg-emerald-800 hover:bg-emerald-700 text-gold-400 border border-gold-500/40 px-3.5 py-2 rounded-xl text-xs shadow-md transition">
                     + نظام جديد
                 </button>
-                <button onclick="openContentModal()" class="bg-emerald-800 hover:bg-emerald-700 text-gold-400 border border-gold-500/40 px-4 py-2 rounded-xl text-sm shadow-md transition">
-                    + إضافة مادة
+                <button onclick="openArticleModal()" class="bg-emerald-900 hover:bg-emerald-800 text-gold-300 border border-gold-500/30 px-3.5 py-2 rounded-xl text-xs shadow-md transition">
+                    + مادة جديدة
                 </button>
             </div>
         </div>
@@ -65,23 +68,28 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-        <!-- Breadcrumb / Back Bar (Hidden on Home) -->
-        <div id="navigationBar" class="hidden items-center justify-between bg-white px-4 py-3 rounded-xl border border-gold-500/30 shadow-sm">
-            <button onclick="goHome()" class="text-xs font-bold text-emerald-900 flex items-center gap-1 hover:text-gold-600 transition">
-                <span>←</span> العودة لقائمة الأنظمة الرئيسية
-            </button>
-            <span id="currentBreadcrumb" class="text-xs font-black text-gold-600 bg-gold-500/10 px-3 py-1 rounded-lg border border-gold-500/20"></span>
+        <!-- Navigation Breadcrumbs -->
+        <div id="breadcrumbBar" class="hidden items-center gap-2 bg-white px-4 py-3 rounded-xl border border-gold-500/30 shadow-sm text-xs font-bold text-emerald-950">
+            <span class="cursor-pointer text-gold-600 hover:underline" onclick="navigateHome()">الرئيسية</span>
+            <span id="breadcrumbCategory" class="hidden items-center gap-2">
+                <span>/</span>
+                <span id="bcCategoryText" class="cursor-pointer text-gold-600 hover:underline"></span>
+            </span>
+            <span id="breadcrumbSystem" class="hidden items-center gap-2">
+                <span>/</span>
+                <span id="bcSystemText" class="text-emerald-900"></span>
+            </span>
         </div>
 
         <!-- Search Bar -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gold-500/20">
             <div class="relative">
-                <input type="text" id="searchInput" oninput="renderApp()" placeholder="ابحث باسم النظام، نص المادة، الشرح، أو السوابق القضائية..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                <input type="text" id="searchInput" oninput="render()" placeholder="ابحث في التصنيفات، الأنظمة، المواد، الشرح، أو السوابق القضائية..." class="w-full bg-paper border border-gold-500/30 text-emerald-950 placeholder-emerald-900/40 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-gold-500">
                 <span class="absolute right-3.5 top-4 text-gold-600">🔍</span>
             </div>
         </div>
 
-        <!-- Dynamic Container (Home Systems Grid or Specific System View) -->
+        <!-- Dynamic Container -->
         <div id="appContainer"></div>
 
     </main>
@@ -91,170 +99,228 @@
         <p>منصة مَرْجِع القانونية © 2026 - نظام إدارة المعلومات القضائية السعودية</p>
     </footer>
 
-    <!-- Modal: New/Edit System -->
-    <div id="newSystemModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl">
+    <!-- Modal: Category (Add/Edit) -->
+    <div id="categoryModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="sysModalTitle" class="font-bold text-emerald-950 text-lg">إضافة نظام أو مجموعة مبادئ جديدة</h3>
-                <button onclick="closeNewSystemModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+                <h3 id="catModalTitle" class="font-bold text-emerald-950 text-base">إضافة تصنيف رئيسي جديد</h3>
+                <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
-            <input type="hidden" id="editSysId" value="">
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-emerald-900 mb-1">اسم النظام أو التصنيف القضائي</label>
-                    <input type="text" id="sysName" placeholder="مثال: نظام الشركات" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">المجال الرئيسي</label>
-                        <input type="text" id="sysField" placeholder="مثال: القانون التجاري..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">الحالة</label>
-                        <select id="sysStatus" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
-                            <option value="ساري">ساري</option>
-                            <option value="معتمد">معتمد كسابقة قضائية</option>
-                        </select>
-                    </div>
-                </div>
+            <input type="hidden" id="editCatId" value="">
+            <div>
+                <label class="block text-xs font-bold text-emerald-900 mb-1">اسم التصنيف الرئيسي</label>
+                <input type="text" id="catNameInput" placeholder="مثال: الأنظمة التجارية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
             </div>
             <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
-                <button onclick="closeNewSystemModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-xl">إلغاء</button>
-                <button onclick="saveSystem()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-sm rounded-xl">حفظ النظام</button>
+                <button onclick="closeCategoryModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
+                <button onclick="saveCategory()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ التصنيف</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Add/Edit Article -->
-    <div id="contentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <!-- Modal: System (Add/Edit) -->
+    <div id="systemModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="sysModalTitle" class="font-bold text-emerald-950 text-base">إضافة نظام جديد</h3>
+                <button onclick="closeSystemModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <input type="hidden" id="editSysId" value="">
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">اختر التصنيف الرئيسي</label>
+                    <select id="sysCatSelect" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">اسم النظام</label>
+                    <input type="text" id="sysNameInput" placeholder="مثال: نظام الدفاتر التجارية" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-emerald-900 mb-1">الحالة</label>
+                    <select id="sysStatusInput" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <option value="ساري">ساري</option>
+                        <option value="معتمد">معتمد كسابقة قضائية</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
+                <button onclick="closeSystemModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
+                <button onclick="saveSystem()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ النظام</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Article (Add/Edit) -->
+    <div id="articleModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-gold-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="artModalTitle" class="font-bold text-emerald-950 text-lg">إضافة مادة أو سابقة قضائية</h3>
-                <button onclick="closeContentModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+                <h3 id="artModalTitle" class="font-bold text-emerald-950 text-base">إضافة مادة جديدة</h3>
+                <button onclick="closeArticleModal()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <input type="hidden" id="editArtIndex" value="">
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">اختر النظام التابع له المادة</label>
-                    <select id="contentSysId" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></select>
+                    <select id="artSysSelect" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة (لترتيبها تلقائياً)</label>
-                        <input type="text" id="artNumber" placeholder="مثال: المادة 2" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold text-emerald-900 mb-1">رقم المادة (للترتيب التلقائي)</label>
+                        <input type="text" id="artNumberInput" placeholder="مثال: المادة 1" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">المواد المرتبطة (اختياري)</label>
-                        <input type="text" id="artCrossLinks" placeholder="مثال: المادة 75" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="artCrossInput" placeholder="مثال: المادة 5" class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-emerald-900 mb-1">نص المادة أو قاعدة المبدأ</label>
-                    <textarea id="artText" rows="3" placeholder="النص القانوني..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                    <textarea id="artTextInput" rows="3" placeholder="النص القانوني..." class="w-full bg-paper border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-emerald-50/50 p-3 rounded-xl border border-emerald-900/10">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">الشرح القانوني (اختياري)</label>
-                        <textarea id="artExplanation" rows="2" placeholder="تفسير الحكم..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                        <textarea id="artExpInput" rows="2" placeholder="تفسير المادة..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">مثال تطبيقي (اختياري)</label>
-                        <textarea id="artExample" rows="2" placeholder="مثال واقعي..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                        <textarea id="artExInput" rows="2" placeholder="مثال عملي..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm"></textarea>
                     </div>
                 </div>
 
                 <div class="space-y-3 bg-paper p-3 rounded-xl border border-gold-500/20">
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">اللائحة والتعاميم (افصلي بـ | للتعدد)</label>
-                        <input type="text" id="artCirculars" placeholder="اللائحة | تعميم..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="artCircInput" placeholder="تعميم | لائحة..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-900 mb-1">السوابق القضائية (افصلي بـ | للتعدد)</label>
-                        <input type="text" id="artJudgments" placeholder="مبدأ محكمة عليا..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="artJudgeInput" placeholder="مبدأ محكمة عليا..." class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm">
                     </div>
                 </div>
             </div>
             <div class="flex justify-end space-x-2 space-x-reverse pt-3 border-t">
-                <button onclick="closeContentModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-xl">إلغاء</button>
-                <button onclick="saveArticle()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-sm rounded-xl">حفظ المادة</button>
+                <button onclick="closeArticleModal()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs rounded-xl">إلغاء</button>
+                <button onclick="saveArticle()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold text-xs rounded-xl">حفظ المادة</button>
             </div>
         </div>
     </div>
 
     <!-- Script Logic -->
     <script>
-        let db = JSON.parse(localStorage.getItem('marja_master_db')) || [
+        // Database Structure: Categories -> Systems -> Articles
+        let db = JSON.parse(localStorage.getItem('marja_hierarchical_db')) || [
             {
-                id: 1,
-                name: "نظام المرافعات الشرعية",
-                field: "الإجراءات القضائية والمرافعات",
-                status: "ساري",
-                articles: [
+                id: 101,
+                name: "الأنظمة التجارية",
+                systems: [
                     {
-                        number: "المادة 1",
-                        text: "تطبق المحاكم على الدعاوى المعروضة عليها أحكام الشريعة الإسلامية...",
-                        explanation: "الأصل في التقاضي استمداد الأحكام الشرعية.",
-                        example: "الرجوع للمصادر الفقهية المعتمدة.",
-                        crossLinks: "",
-                        circulars: ["تعميم رقم 12 أ"],
-                        judgments: []
-                    },
-                    {
-                        number: "المادة 75",
-                        text: "إذا دفع أحد الأطراف بعدم الاختصاص النوعي وجب على المحكمة أن تفصل فيه بحكم مستقل...",
-                        explanation: "قواعد الاختصاص النوعي من النظام العام وتثار في أي مرحلة من مراحل الدعوى.",
-                        example: "الدفع بكون النزاع تجارياً أمام محكمة الأحوال الشخصية.",
-                        crossLinks: "المادة 16 من نظام المحاكم التجارية",
-                        circulars: ["اللائحة التنفيذية لنظام المرافعات"],
-                        judgments: ["مبدأ المحكمة العليا: الدفع بعدم الاختصاص يقبل في أي مرحلة"]
+                        id: 1001,
+                        name: "نظام المحاكم التجارية",
+                        status: "ساري",
+                        articles: [
+                            {
+                                number: "المادة 1",
+                                text: "تختص المحاكم التجارية بالنظر في المنازعات التي تنشأ بين التجار...",
+                                explanation: "النطاق الموضوعي لاختصاص المحاكم التجارية.",
+                                example: "نزاع بين شركتين مقاولات.",
+                                crossLinks: "",
+                                circulars: ["تعميم تجاري رقم 1"],
+                                judgments: []
+                            },
+                            {
+                                number: "المادة 2",
+                                text: "تطبق المحاكم التجارية أحكام الأنظمة التجارية وما يعارضه يطبق بشأنه المبادئ العامة...",
+                                explanation: "تسلسل تطبيق القواعد النظامية.",
+                                example: "",
+                                crossLinks: "",
+                                circulars: [],
+                                judgments: []
+                            }
+                        ]
                     }
                 ]
             }
         ];
 
-        let currentActiveSystemId = null; // null means Home (Grid of Systems)
+        // Navigation state: null = Home (Categories), categoryId = Systems view, systemId = Articles view
+        let currentCatId = null;
+        let currentSysId = null;
 
         function saveData() {
-            localStorage.setItem('marja_master_db', JSON.stringify(db));
-            renderApp();
+            localStorage.setItem('marja_hierarchical_db', JSON.stringify(db));
+            render();
         }
 
-        function goHome() {
-            currentActiveSystemId = null;
-            document.getElementById('navigationBar').classList.add('hidden');
-            document.getElementById('navigationBar').classList.remove('flex');
-            renderApp();
+        function navigateHome() {
+            currentCatId = null;
+            currentSysId = null;
+            render();
         }
 
-        function openSystemView(id) {
-            currentActiveSystemId = id;
-            document.getElementById('navigationBar').classList.remove('hidden');
-            document.getElementById('navigationBar').classList.add('flex');
-            renderApp();
+        function navigateCategory(catId) {
+            currentCatId = catId;
+            currentSysId = null;
+            render();
         }
 
-        // Helper to extract numeric value from article number string (e.g. "المادة 75" -> 75) for sorting
+        function navigateSystem(sysId) {
+            currentSysId = sysId;
+            render();
+        }
+
         function extractNumber(str) {
             let match = str.match(/\d+/);
             return match ? parseInt(match[0], 10) : 999999;
         }
 
-        function renderApp() {
+        function render() {
             const container = document.getElementById('appContainer');
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
-            container.innerHTML = '';
+            const breadcrumbBar = document.getElementById('breadcrumbBar');
+            const bcCat = document.getElementById('breadcrumbCategory');
+            const bcSys = document.getElementById('breadcrumbSystem');
 
-            updateDropdown();
+            updateDropdowns();
 
-            // If a specific system is selected
-            if (currentActiveSystemId !== null) {
-                let sys = db.find(s => s.id === currentActiveSystemId);
-                if (!sys) { goHome(); return; }
+            // Breadcrumbs management
+            if (currentCatId === null && currentSysId === null) {
+                breadcrumbBar.classList.add('hidden');
+                breadcrumbBar.classList.remove('flex');
+            } else {
+                breadcrumbBar.classList.remove('hidden');
+                breadcrumbBar.classList.add('flex');
+                let cat = db.find(c => c.id === currentCatId);
+                if (cat) {
+                    bcCat.classList.remove('hidden');
+                    bcCat.classList.add('flex');
+                    document.getElementById('bcCategoryText').innerText = cat.name;
+                    document.getElementById('bcCategoryText').setAttribute('onclick', `navigateCategory(${cat.id})`);
+                } else {
+                    bcCat.classList.add('hidden');
+                }
 
-                document.getElementById('currentBreadcrumb').innerText = sys.name;
+                if (currentSysId !== null && cat) {
+                    let sys = cat.systems.find(s => s.id === currentSysId);
+                    if (sys) {
+                        bcSys.classList.remove('hidden');
+                        bcSys.classList.add('flex');
+                        document.getElementById('bcSystemText').innerText = sys.name;
+                    } else {
+                        bcSys.classList.add('hidden');
+                    }
+                } else {
+                    bcSys.classList.add('hidden');
+                }
+            }
 
-                // Filter & Sort articles automatically
+            // LEVEL 3: Articles View (Inside a System)
+            if (currentSysId !== null && currentCatId !== null) {
+                let cat = db.find(c => c.id === currentCatId);
+                let sys = cat ? cat.systems.find(s => s.id === currentSysId) : null;
+                if (!sys) { navigateHome(); return; }
+
                 let sortedArticles = [...sys.articles].map((art, originalIndex) => ({ ...art, originalIndex }))
                     .sort((a, b) => extractNumber(a.number) - extractNumber(b.number));
 
@@ -263,48 +329,35 @@
                         art.number.toLowerCase().includes(searchVal) || 
                         art.text.toLowerCase().includes(searchVal) || 
                         (art.explanation && art.explanation.toLowerCase().includes(searchVal)) ||
-                        (art.example && art.example.toLowerCase().includes(searchVal)) ||
-                        (art.crossLinks && art.crossLinks.toLowerCase().includes(searchVal)) ||
-                        art.circulars.some(c => c.toLowerCase().includes(searchVal)) ||
-                        art.judgments.some(j => j.toLowerCase().includes(searchVal))
+                        (art.example && art.example.toLowerCase().includes(searchVal))
                     );
                 }
 
                 let articlesHTML = '';
                 if (sortedArticles.length === 0) {
-                    articlesHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">لا توجد مواد مطابقة داخل هذا النظام</div>`;
+                    articlesHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد مواد مسجلة أو مطابقة في هذا النظام</div>`;
                 } else {
                     sortedArticles.forEach(art => {
                         articlesHTML += `
                             <div class="bg-paper p-5 rounded-2xl border-r-4 border-emerald-800 space-y-3 shadow-sm">
                                 <div class="flex justify-between items-center border-b pb-2 border-gold-500/20">
-                                    <span class="font-black text-emerald-950 text-lg">📜 ${art.number}</span>
+                                    <span class="font-black text-emerald-950 text-base">📜 ${art.number}</span>
                                     <div class="flex items-center gap-2">
                                         ${art.crossLinks ? `<span class="text-xs bg-gold-500/20 text-emerald-950 px-2.5 py-1 rounded-lg border border-gold-500/30">🔗 ارتباط: ${art.crossLinks}</span>` : ''}
                                         <button onclick="openEditArticleModal(${sys.id}, ${art.originalIndex})" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-lg font-bold">✏️ تعديل</button>
                                         <button onclick="deleteArticle(${sys.id}, ${art.originalIndex})" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg font-bold">حذف</button>
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-800 leading-relaxed font-medium">${art.text}</p>
-
+                                <p class="text-xs sm:text-sm text-gray-800 leading-relaxed font-medium">${art.text}</p>
                                 ${(art.explanation || art.example) ? `
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2">
                                         ${art.explanation ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>💡 الشرح القانوني:</strong> ${art.explanation}</div>` : ''}
                                         ${art.example ? `<div class="bg-white p-3 rounded-xl border border-gray-200"><strong>📝 مثال تطبيقي:</strong> ${art.example}</div>` : ''}
                                     </div>
                                 ` : ''}
-
                                 <div class="space-y-1.5 pt-2">
-                                    ${art.circulars && art.circulars.length > 0 ? `
-                                        <div class="text-xs bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-900/10 text-emerald-900">
-                                            <strong>📢 اللوائح والتعاميم:</strong> ${art.circulars.join(' | ')}
-                                        </div>
-                                    ` : ''}
-                                    ${art.judgments && art.judgments.length > 0 ? `
-                                        <div class="text-xs bg-amber-50/60 p-2.5 rounded-xl border border-amber-900/10 text-amber-950">
-                                            <strong>⚖️ السوابق القضائية:</strong> ${art.judgments.join(' | ')}
-                                        </div>
-                                    ` : ''}
+                                    ${art.circulars && art.circulars.length > 0 ? `<div class="text-xs bg-emerald-50/60 p-2 rounded-xl border border-emerald-900/10 text-emerald-900"><strong>📢 التعاميم:</strong> ${art.circulars.join(' | ')}</div>` : ''}
+                                    ${art.judgments && art.judgments.length > 0 ? `<div class="text-xs bg-amber-50/60 p-2 rounded-xl border border-amber-900/10 text-amber-950"><strong>⚖️ السوابق:</strong> ${art.judgments.join(' | ')}</div>` : ''}
                                 </div>
                             </div>
                         `;
@@ -315,67 +368,110 @@
                     <div class="bg-white rounded-3xl border border-gold-500/40 shadow-md p-6 sm:p-8 space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-4">
                             <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
-                                    <span class="text-xs text-gray-500 font-medium">📁 مجال: ${sys.field}</span>
-                                </div>
-                                <h2 class="text-2xl sm:text-3xl font-black text-emerald-950 mt-1">${sys.name}</h2>
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
+                                <h2 class="text-2xl font-black text-emerald-950 mt-1">${sys.name}</h2>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="openEditSystemModal(${sys.id})" class="text-xs bg-gold-500/20 hover:bg-gold-500/30 text-emerald-950 px-3.5 py-2 rounded-xl font-bold border border-gold-500/40">✏️ تعديل بيانات النظام</button>
-                                <button onclick="deleteSystem(${sys.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-3 py-2 bg-red-50 rounded-xl">حذف النظام</button>
+                                <button onclick="openEditSystemModal(${sys.id})" class="text-xs bg-gold-500/20 text-emerald-950 px-3.5 py-2 rounded-xl font-bold border border-gold-500/40">✏️ تعديل النظام</button>
+                                <button onclick="deleteSystem(${sys.id})" class="text-red-500 text-xs font-bold px-3 py-2 bg-red-50 rounded-xl">حذف</button>
                             </div>
                         </div>
-
                         <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-black text-emerald-900">مواد ولوائح النظام (مرتبة تلقائياً):</h3>
-                            <button onclick="openContentModalPreselect(${sys.id})" class="bg-emerald-900 hover:bg-emerald-800 text-gold-400 text-xs font-bold px-3.5 py-2 rounded-xl">
-                                + إضافة مادة لهذا النظام
-                            </button>
+                            <h3 class="text-sm font-black text-emerald-900">مواد النظام (مرتبة تصاعدياً تلقائياً):</h3>
+                            <button onclick="openArticleModalPreselect(${sys.id})" class="bg-emerald-900 hover:bg-emerald-800 text-gold-400 text-xs font-bold px-3.5 py-2 rounded-xl">+ إضافة مادة هنا</button>
                         </div>
-
-                        <div class="space-y-4">
-                            ${articlesHTML}
-                        </div>
+                        <div class="space-y-4">${articlesHTML}</div>
                     </div>
                 `;
+            } 
+            // LEVEL 2: Systems View (Inside a Category)
+            else if (currentCatId !== null) {
+                let cat = db.find(c => c.id === currentCatId);
+                if (!cat) { navigateHome(); return; }
 
-            } else {
-                // Home: Grid of All Systems
-                let filteredSystems = db.filter(sys => {
-                    let matchSys = sys.name.toLowerCase().includes(searchVal) || sys.field.toLowerCase().includes(searchVal);
-                    let matchArticles = sys.articles.some(a => 
-                        a.number.toLowerCase().includes(searchVal) || 
-                        a.text.toLowerCase().includes(searchVal) ||
-                        (a.explanation && a.explanation.toLowerCase().includes(searchVal))
-                    );
-                    return matchSys || matchArticles;
-                });
+                let filteredSystems = cat.systems.filter(s => 
+                    s.name.toLowerCase().includes(searchVal) || 
+                    s.articles.some(a => a.text.toLowerCase().includes(searchVal) || a.number.toLowerCase().includes(searchVal))
+                );
 
+                let systemsHTML = '';
                 if (filteredSystems.length === 0) {
-                    container.innerHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">لا توجد أنظمة مطابقة لبحثك</div>`;
+                    systemsHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد أنظمة تابعة لهذا التصنيف حالياً</div>`;
+                } else {
+                    systemsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+                    filteredSystems.forEach(sys => {
+                        systemsHTML += `
+                            <div class="bg-white rounded-3xl border border-gold-500/30 shadow-sm p-6 flex flex-col justify-between space-y-4 hover:shadow-md transition">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
+                                        <span class="text-xs font-bold text-gold-600 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">📚 ${sys.articles.length} مواد</span>
+                                    </div>
+                                    <h3 class="text-xl font-black text-emerald-950 pt-2 cursor-pointer hover:text-gold-600" onclick="navigateSystem(${sys.id})">${sys.name}</h3>
+                                </div>
+                                <div class="pt-4 border-t flex items-center justify-between">
+                                    <button onclick="navigateSystem(${sys.id})" class="bg-emerald-950 hover:bg-emerald-900 text-gold-400 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                                        استعراض مواده 📖
+                                    </button>
+                                    <div class="flex items-center gap-1">
+                                        <button onclick="openEditSystemModal(${sys.id})" class="p-2 text-gray-600 bg-gray-100 rounded-xl text-xs font-bold" title="تعديل">✏️</button>
+                                        <button onclick="deleteSystem(${sys.id})" class="p-2 text-red-500 bg-red-50 rounded-xl text-xs font-bold" title="حذف">🗑️</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    systemsHTML += `</div>`;
+                }
+
+                container.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-3xl border border-gold-500/30 flex justify-between items-center shadow-sm">
+                            <div>
+                                <span class="text-xs text-gray-500 font-bold">تصنيف رئيسي</span>
+                                <h2 class="text-2xl font-black text-emerald-950">${cat.name}</h2>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="openEditCategoryModal(${cat.id})" class="text-xs bg-gold-500/20 text-emerald-950 px-3.5 py-2 rounded-xl font-bold border border-gold-500/40">✏️ تعديل اسم التصنيف</button>
+                                <button onclick="deleteCategory(${cat.id})" class="text-red-500 text-xs font-bold px-3 py-2 bg-red-50 rounded-xl">حذف التصنيف</button>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-black text-emerald-950">الأنظمة التابعة لهذا التصنيف:</h3>
+                        ${systemsHTML}
+                    </div>
+                `;
+            } 
+            // LEVEL 1: Home (Categories Grid)
+            else {
+                let filteredCats = db.filter(c => 
+                    c.name.toLowerCase().includes(searchVal) || 
+                    c.systems.some(s => s.name.toLowerCase().includes(searchVal) || s.articles.some(a => a.text.toLowerCase().includes(searchVal)))
+                );
+
+                if (filteredCats.length === 0) {
+                    container.innerHTML = `<div class="text-center py-12 text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300 text-xs">لا توجد تصنيفات مطابقة لبحثك</div>`;
                     return;
                 }
 
                 let gridHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
-                filteredSystems.forEach(sys => {
+                filteredCats.forEach(cat => {
+                    let totalArticles = cat.systems.reduce((acc, sys) => acc + sys.articles.length, 0);
                     gridHTML += `
                         <div class="bg-white rounded-3xl border border-gold-500/30 shadow-sm p-6 sm:p-7 flex flex-col justify-between space-y-4 hover:shadow-md transition">
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-bold">${sys.status}</span>
-                                    <span class="text-xs font-bold text-gold-600 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20">📚 ${sys.articles.length} مواد مسجلة</span>
+                                    <span class="text-xs bg-gold-500/20 text-emerald-950 px-3 py-1 rounded-lg font-bold border border-gold-500/30">تصنيف رئيسي</span>
+                                    <span class="text-xs font-bold text-gray-500">📁 ${cat.systems.length} أنظمة | 📜 ${totalArticles} مواد</span>
                                 </div>
-                                <h3 class="text-xl font-black text-emerald-950 pt-2">${sys.name}</h3>
-                                <p class="text-xs text-gray-500 font-medium">المجال: ${sys.field}</p>
+                                <h3 class="text-2xl font-black text-emerald-950 pt-3 cursor-pointer hover:text-gold-600" onclick="navigateCategory(${cat.id})">${cat.name}</h3>
                             </div>
                             <div class="pt-4 border-t flex items-center justify-between">
-                                <button onclick="openSystemView(${sys.id})" class="bg-emerald-950 hover:bg-emerald-900 text-gold-400 font-bold px-4 py-2.5 rounded-xl text-xs shadow transition flex items-center gap-1.5">
-                                    <span>📖</span> استعراض المواد والأنظمة
+                                <button onclick="navigateCategory(${cat.id})" class="bg-emerald-950 hover:bg-emerald-900 text-gold-400 font-bold px-4 py-2.5 rounded-xl text-xs shadow transition flex items-center gap-1.5">
+                                    <span>📂</span> استعراض الأنظمة بداخله
                                 </button>
                                 <div class="flex items-center gap-1">
-                                    <button onclick="openEditSystemModal(${sys.id})" class="p-2 text-gray-600 hover:text-emerald-950 text-xs font-bold bg-gray-100 rounded-xl" title="تعديل">✏️</button>
-                                    <button onclick="deleteSystem(${sys.id})" class="p-2 text-red-500 hover:text-red-700 text-xs font-bold bg-red-50 rounded-xl" title="حذف">🗑️</button>
+                                    <button onclick="openEditCategoryModal(${cat.id})" class="p-2 text-gray-600 bg-gray-100 rounded-xl text-xs font-bold" title="تعديل">✏️</button>
+                                    <button onclick="deleteCategory(${cat.id})" class="p-2 text-red-500 bg-red-50 rounded-xl text-xs font-bold" title="حذف">🗑️</button>
                                 </div>
                             </div>
                         </div>
@@ -386,162 +482,232 @@
             }
         }
 
+        // Category Modals
+        function openCategoryModal() {
+            document.getElementById('editCatId').value = '';
+            document.getElementById('catModalTitle').innerText = 'إضافة تصنيف رئيسي جديد';
+            document.getElementById('catNameInput').value = '';
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+        function openEditCategoryModal(id) {
+            let cat = db.find(c => c.id === id);
+            if (!cat) return;
+            document.getElementById('editCatId').value = cat.id;
+            document.getElementById('catModalTitle').innerText = 'تعديل اسم التصنيف الرئيسي';
+            document.getElementById('catNameInput').value = cat.name;
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+        function closeCategoryModal() { document.getElementById('categoryModal').classList.add('hidden'); }
+        function saveCategory() {
+            let editId = document.getElementById('editCatId').value;
+            let name = document.getElementById('catNameInput').value.trim();
+            if (!name) return alert('أدخل اسم التصنيف');
+            if (editId) {
+                let cat = db.find(c => c.id == editId);
+                if (cat) cat.name = name;
+            } else {
+                db.push({ id: Date.now(), name, systems: [] });
+            }
+            saveData();
+            closeCategoryModal();
+        }
+        function deleteCategory(id) {
+            if (confirm('حذف هذا التصنيف بكافة أنظمته ومواده؟')) {
+                db = db.filter(c => c.id !== id);
+                if (currentCatId === id) navigateHome();
+                else saveData();
+            }
+        }
+
         // System Modals
-        function openNewSystemModal() {
+        function openSystemModal() {
             document.getElementById('editSysId').value = '';
-            document.getElementById('sysModalTitle').innerText = 'إضافة نظام أو مجموعة مبادئ جديدة';
-            document.getElementById('sysName').value = '';
-            document.getElementById('sysField').value = '';
-            document.getElementById('newSystemModal').classList.remove('hidden');
+            document.getElementById('sysModalTitle').innerText = 'إضافة نظام جديد';
+            document.getElementById('sysNameInput').value = '';
+            if (currentCatId !== null) document.getElementById('sysCatSelect').value = currentCatId;
+            document.getElementById('systemModal').classList.remove('hidden');
         }
         function openEditSystemModal(id) {
-            let sys = db.find(s => s.id === id);
+            let sys = null, foundCatId = null;
+            db.forEach(c => {
+                let s = c.systems.find(x => x.id === id);
+                if (s) { sys = s; foundCatId = c.id; }
+            });
             if (!sys) return;
             document.getElementById('editSysId').value = sys.id;
             document.getElementById('sysModalTitle').innerText = 'تعديل بيانات النظام';
-            document.getElementById('sysName').value = sys.name;
-            document.getElementById('sysField').value = sys.field;
-            document.getElementById('sysStatus').value = sys.status;
-            document.getElementById('newSystemModal').classList.remove('hidden');
+            document.getElementById('sysCatSelect').value = foundCatId;
+            document.getElementById('sysNameInput').value = sys.name;
+            document.getElementById('sysStatusInput').value = sys.status;
+            document.getElementById('systemModal').classList.remove('hidden');
         }
-        function closeNewSystemModal() { document.getElementById('newSystemModal').classList.add('hidden'); }
-
+        function closeSystemModal() { document.getElementById('systemModal').classList.add('hidden'); }
         function saveSystem() {
             let editId = document.getElementById('editSysId').value;
-            let name = document.getElementById('sysName').value.trim();
-            let field = document.getElementById('sysField').value.trim() || "أنظمة عامة";
-            let status = document.getElementById('sysStatus').value;
+            let catId = Number(document.getElementById('sysCatSelect').value);
+            let name = document.getElementById('sysNameInput').value.trim();
+            let status = document.getElementById('sysStatusInput').value;
             if (!name) return alert('أدخل اسم النظام');
+            let cat = db.find(c => c.id === catId);
+            if (!cat) return alert('اختر تصنيفاً صحيحاً');
 
             if (editId) {
-                let sys = db.find(s => s.id == editId);
-                if (sys) {
-                    sys.name = name;
-                    sys.field = field;
-                    sys.status = status;
+                let oldSys = null, oldCat = null;
+                db.forEach(c => {
+                    let s = c.systems.find(x => x.id == editId);
+                    if (s) { oldSys = s; oldCat = c; }
+                });
+                if (oldSys) {
+                    oldSys.name = name;
+                    oldSys.status = status;
+                    if (oldCat.id !== catId) {
+                        oldCat.systems = oldCat.systems.filter(x => x.id != editId);
+                        cat.systems.push(oldSys);
+                    }
                 }
             } else {
-                let newSys = { id: Date.now(), name, field, status, articles: [] };
-                db.push(newSys);
-                currentActiveSystemId = newSys.id;
-                document.getElementById('navigationBar').classList.remove('hidden');
-                document.getElementById('navigationBar').classList.add('flex');
+                let newSys = { id: Date.now(), name, status, articles: [] };
+                cat.systems.push(newSys);
+                currentCatId = cat.id;
+                currentSysId = newSys.id;
             }
             saveData();
-            closeNewSystemModal();
+            closeSystemModal();
+        }
+        function deleteSystem(id) {
+            if (confirm('حذف هذا النظام بكافة مواده؟')) {
+                db.forEach(c => {
+                    c.systems = c.systems.filter(s => s.id !== id);
+                });
+                if (currentSysId === id) {
+                    currentSysId = null;
+                }
+                saveData();
+            }
         }
 
         // Article Modals
-        function openContentModal() {
+        function openArticleModal() {
             document.getElementById('editArtIndex').value = '';
-            document.getElementById('artModalTitle').innerText = 'إضافة مادة أو سابقة قضائية';
-            if (currentActiveSystemId !== null) {
-                document.getElementById('contentSysId').value = currentActiveSystemId;
-            }
-            document.getElementById('artNumber').value = '';
-            document.getElementById('artText').value = '';
-            document.getElementById('artExplanation').value = '';
-            document.getElementById('artExample').value = '';
-            document.getElementById('artCrossLinks').value = '';
-            document.getElementById('artCirculars').value = '';
-            document.getElementById('artJudgments').value = '';
-            document.getElementById('contentModal').classList.remove('hidden');
+            document.getElementById('artModalTitle').innerText = 'إضافة مادة جديدة';
+            if (currentSysId !== null) document.getElementById('artSysSelect').value = currentSysId;
+            document.getElementById('artNumberInput').value = '';
+            document.getElementById('artTextInput').value = '';
+            document.getElementById('artExpInput').value = '';
+            document.getElementById('artExInput').value = '';
+            document.getElementById('artCrossInput').value = '';
+            document.getElementById('artCircInput').value = '';
+            document.getElementById('artJudgeInput').value = '';
+            document.getElementById('articleModal').classList.remove('hidden');
         }
-        function openContentModalPreselect(sysId) {
-            openContentModal();
-            document.getElementById('contentSysId').value = sysId;
+        function openArticleModalPreselect(sysId) {
+            openArticleModal();
+            document.getElementById('artSysSelect').value = sysId;
         }
         function openEditArticleModal(sysId, artIndex) {
-            let sys = db.find(s => s.id === sysId);
+            let sys = null;
+            db.forEach(c => {
+                let s = c.systems.find(x => x.id === sysId);
+                if (s) sys = s;
+            });
             if (!sys || !sys.articles[artIndex]) return;
             let art = sys.articles[artIndex];
 
             document.getElementById('editArtIndex').value = `${sysId}_${artIndex}`;
-            document.getElementById('artModalTitle').innerText = 'تعديل المادة أو المبدأ';
-            document.getElementById('contentSysId').value = sysId;
-            document.getElementById('artNumber').value = art.number;
-            document.getElementById('artText').value = art.text;
-            document.getElementById('artExplanation').value = art.explanation || '';
-            document.getElementById('artExample').value = art.example || '';
-            document.getElementById('artCrossLinks').value = art.crossLinks || '';
-            document.getElementById('artCirculars').value = art.circulars ? art.circulars.join(' | ') : '';
-            document.getElementById('artJudgments').value = art.judgments ? art.judgments.join(' | ') : '';
-
-            document.getElementById('contentModal').classList.remove('hidden');
+            document.getElementById('artModalTitle').innerText = 'تعديل المادة';
+            document.getElementById('artSysSelect').value = sysId;
+            document.getElementById('artNumberInput').value = art.number;
+            document.getElementById('artTextInput').value = art.text;
+            document.getElementById('artExpInput').value = art.explanation || '';
+            document.getElementById('artExInput').value = art.example || '';
+            document.getElementById('artCrossInput').value = art.crossLinks || '';
+            document.getElementById('artCircInput').value = art.circulars ? art.circulars.join(' | ') : '';
+            document.getElementById('artJudgeInput').value = art.judgments ? art.judgments.join(' | ') : '';
+            document.getElementById('articleModal').classList.remove('hidden');
         }
-        function closeContentModal() { document.getElementById('contentModal').classList.add('hidden'); }
-
+        function closeArticleModal() { document.getElementById('articleModal').classList.add('hidden'); }
         function saveArticle() {
             let editIndexVal = document.getElementById('editArtIndex').value;
-            let sysId = Number(document.getElementById('contentSysId').value);
-            let number = document.getElementById('artNumber').value.trim();
-            let text = document.getElementById('artText').value.trim();
-            let explanation = document.getElementById('artExplanation').value.trim();
-            let example = document.getElementById('artExample').value.trim();
-            let crossLinks = document.getElementById('artCrossLinks').value.trim();
-            
-            let circularsRaw = document.getElementById('artCirculars').value.trim();
-            let judgmentsRaw = document.getElementById('artJudgments').value.trim();
-            let circulars = circularsRaw ? circularsRaw.split('|').map(s => s.trim()) : [];
-            let judgments = judgmentsRaw ? judgmentsRaw.split('|').map(s => s.trim()) : [];
+            let sysId = Number(document.getElementById('artSysSelect').value);
+            let number = document.getElementById('artNumberInput').value.trim();
+            let text = document.getElementById('artTextInput').value.trim();
+            let explanation = document.getElementById('artExpInput').value.trim();
+            let example = document.getElementById('artExInput').value.trim();
+            let crossLinks = document.getElementById('artCrossInput').value.trim();
+            let circRaw = document.getElementById('artCircInput').value.trim();
+            let judgeRaw = document.getElementById('artJudgeInput').value.trim();
+            let circulars = circRaw ? circRaw.split('|').map(s => s.trim()) : [];
+            let judgments = judgeRaw ? judgeRaw.split('|').map(s => s.trim()) : [];
 
             if (!number || !text) return alert('أدخل رقم المادة ونصها');
-            
-            let sys = db.find(s => s.id === sysId);
-            if (!sys) return;
 
-            let updatedArt = { number, text, explanation, example, crossLinks, circulars, judgments };
+            let targetSys = null;
+            db.forEach(c => {
+                let s = c.systems.find(x => x.id === sysId);
+                if (s) targetSys = s;
+            });
+            if (!targetSys) return alert('اختر نظاماً صحيحاً');
+
+            let newArt = { number, text, explanation, example, crossLinks, circulars, judgments };
 
             if (editIndexVal) {
                 let parts = editIndexVal.split('_');
                 let oldSysId = Number(parts[0]);
                 let oldArtIdx = Number(parts[1]);
-                let oldSys = db.find(s => s.id === oldSysId);
+                let oldSys = null;
+                db.forEach(c => {
+                    let s = c.systems.find(x => x.id === oldSysId);
+                    if (s) oldSys = s;
+                });
 
                 if (oldSysId === sysId) {
-                    oldSys.articles[oldArtIdx] = updatedArt;
+                    oldSys.articles[oldArtIdx] = newArt;
                 } else {
                     oldSys.articles.splice(oldArtIdx, 1);
-                    sys.articles.push(updatedArt);
+                    targetSys.articles.push(newArt);
                 }
             } else {
-                sys.articles.push(updatedArt);
+                targetSys.articles.push(newArt);
             }
             saveData();
-            closeContentModal();
+            closeArticleModal();
         }
-
-        function deleteSystem(id) {
-            if (confirm('حذف هذا النظام بكافة مواده؟')) {
-                db = db.filter(s => s.id !== id);
-                if (currentActiveSystemId === id) goHome();
-                else saveData();
-            }
-        }
-
         function deleteArticle(sysId, artIndex) {
             if (confirm('حذف هذه المادة؟')) {
-                let sys = db.find(s => s.id === sysId);
-                if (sys) {
-                    sys.articles.splice(artIndex, 1);
-                    saveData();
-                }
+                db.forEach(c => {
+                    let s = c.systems.find(x => x.id === sysId);
+                    if (s) s.articles.splice(artIndex, 1);
+                });
+                saveData();
             }
         }
 
-        function updateDropdown() {
-            let sel = document.getElementById('contentSysId');
-            if (!sel) return;
-            sel.innerHTML = '';
-            db.forEach(sys => {
-                let opt = document.createElement('option');
-                opt.value = sys.id;
-                opt.innerText = `${sys.name} (${sys.field})`;
-                sel.appendChild(opt);
-            });
+        function updateDropdowns() {
+            let catSel = document.getElementById('sysCatSelect');
+            let artSysSel = document.getElementById('artSysSelect');
+            if (catSel) {
+                catSel.innerHTML = '';
+                db.forEach(c => {
+                    let opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    catSel.appendChild(opt);
+                });
+            }
+            if (artSysSel) {
+                artSysSel.innerHTML = '';
+                db.forEach(c => {
+                    c.systems.forEach(s => {
+                        let opt = document.createElement('option');
+                        opt.value = s.id;
+                        opt.innerText = `${c.name} > ${s.name}`;
+                        artSysSel.appendChild(opt);
+                    });
+                });
+            }
         }
 
-        renderApp();
+        render();
     </script>
 </body>
 </html>
